@@ -289,7 +289,7 @@ def font_to_array(filename, size):
         |                      |--> 'Width'    : glyph width (int)
         |                      |--> 'Height'   : glyph height (int)
         |                      |--> 'Location' : glyph index in font array (int)
-        |                      |--> 'Ascent'   : glyph ascent (int)
+        |                      |--> 'Baseline' : glyph baseline (int)
         |                      |--> 'Dummy'    : glyph data added to glyph width (int)
         |                      |--> 'Bitmap'   : glyph pixel array (list)
         |                      \--> 'String'   : glyph ascii representation (list)  
@@ -302,7 +302,7 @@ def font_to_array(filename, size):
     font_table = {}
     
     # Prepare characters for rendering
-    elements = string.ascii_letters +  string.digits + string.punctuation
+    elements = ' ' + string.ascii_letters +  string.digits + string.punctuation
     elements.replace('//', '/')
     keys = [i for i in elements]
     keys.sort()
@@ -315,38 +315,55 @@ def font_to_array(filename, size):
     # Render and format characters
     glyph_location = 0
     glyph_size = 0
-    
+
     for char in keys:
-        # Render character
-        glyph = fnt.glyph_for_character(char)
-        ch = glyph.bitmap
+        if char == " ":
+            # Manually insert the space character
+            # Space is equal to 4 pixels
+            font_table[char] = {
+                                'Width'    : 2,
+                                'Height'   : 1,
+                                'Location' : glyph_location,
+                                'Baseline' : 2,
+                                'Dummy'    : 0,
+                                'Bitmap'   : ["0x00", "0x00", "0x00", "0x00"],
+                                'String'   : ["SPACE"],
+                               }
+            
+            glyph_size = 4
+            # Update the location of the next character in the font array
+            glyph_location += glyph_size
+        else:
+            # Render character
+            glyph = fnt.glyph_for_character(char)
+            ch = glyph.bitmap
         
-        # Format character
-        bitmap_data = tuple() 
-        bitmap = [i for i in ch.pixels]        
-        bitmap_data, dummy_added = add_dummy_data(bitmap, ch.width, ch.height)
-        glyph_bitmap = format_bitmap(bitmap_data[0])
-        # Represent the width of the bitmap as the SSD1322 does, where each
-        # column address represents 4 pixels.This requires a division by 2 (each byte represents 2 pixels)
-        # but we divide by 4 because format_bitmap() halves the width of the bitmap.
-        glyph_width = bitmap_data[1] // 4
-        glyph_height = bitmap_data[2]
-        glyph_string = ch.__repr__()
-        glyph_ascent = glyph.ascent
+            # Format character
+            bitmap_data = tuple() 
+            bitmap = [i for i in ch.pixels]        
+            bitmap_data, dummy_added = add_dummy_data(bitmap, ch.width, ch.height)
+            glyph_bitmap = format_bitmap(bitmap_data[0])
+            # Represent the width of the bitmap as the SSD1322 does, where each
+            # column address represents 4 pixels.This requires a division by 2 (each byte represents 2 pixels)
+            # but we divide by 4 because format_bitmap() halves the width of the bitmap.
+            glyph_width    = bitmap_data[1] // 4
+            glyph_height   = bitmap_data[2]
+            glyph_string   = ch.__repr__()
+            glyph_baseline = font_height - glyph.ascent - font_descent
         
-        font_table[char] = {
-                            'Width'    : glyph_width,
-                            'Height'   : glyph_height, 
-                            'Location' : glyph_location,
-                            'Ascent'   : glyph_ascent, 
-                            'Dummy'    : dummy_added,
-                            'Bitmap'   : glyph_bitmap,
-                            'String'   : glyph_string.split('\n'),
-                            }
+            font_table[char] = {
+                                'Width'    : glyph_width,
+                                'Height'   : glyph_height, 
+                                'Location' : glyph_location,
+                                'Baseline' : glyph_baseline, 
+                                'Dummy'    : dummy_added,
+                                'Bitmap'   : glyph_bitmap,
+                                'String'   : glyph_string.split('\n'),
+                                }
         
-        glyph_size = glyph_width * 2 * glyph_height
-        # Update the location of the next character in the font array
-        glyph_location += glyph_size
+            glyph_size = glyph_width * 2 * glyph_height
+            # Update the location of the next character in the font array
+            glyph_location += glyph_size
         
     return (font_table, font_height, font_descent)
 
@@ -414,14 +431,14 @@ def font_to_c(filename, size):
         keys = list(font_table.keys())
         for i in keys:
             # Convert font parameters to hexadecimal strings
-            location = "0x%04X" % font_table[i]['Location']
-            width    = "0x%02X" % font_table[i]['Width']
-            height   = "0x%02X" % font_table[i]['Height']
-            ascent   = "0x%02X" % font_table[i]['Ascent']
-            dummy    = "0x%02X" % font_table[i]['Dummy']       
+            location   = "0x%04X" % font_table[i]['Location']
+            width      = "0x%02X" % font_table[i]['Width']
+            height     = "0x%02X" % font_table[i]['Height']
+            baseline   = "0x%02X" % font_table[i]['Baseline']
+            dummy      = "0x%02X" % font_table[i]['Dummy']       
             # Make a font table entry for the current glyph
             f.write("    {%s, %s, %s, %s, %s},         " % \
-                    (location, width, height, ascent, dummy))
+                    (location, width, height, baseline, dummy))
             f.write("// Character - \"{}\", Ascii - {}\n".format(i, ord(i)))   
         # End of Font table
         f.write("};\n\n")   

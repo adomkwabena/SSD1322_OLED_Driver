@@ -700,7 +700,7 @@ uint8_t ssd1322_put_resource_fb(uint8_t * fb,
                                 const uint8_t * resource_ptr)
 {
     // Variables for manipulating bytes
-    uint8_t temp_byte 	    = 0x00;
+    uint8_t temp_byte 	        = 0x00;
     uint8_t new_pixel_byte 	= 0x00;
     uint8_t old_pixel_byte 	= 0x00;
 

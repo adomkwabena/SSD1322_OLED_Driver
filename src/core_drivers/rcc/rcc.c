@@ -1,5 +1,5 @@
 /**
- *  @file   main.c
+ *  @file   rcc.c
  *  @author Adom Kwabena
  *  @brief  A basic RCC driver for the stm32f407vgt6 microcontroller.
  */

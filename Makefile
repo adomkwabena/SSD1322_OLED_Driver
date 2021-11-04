@@ -24,6 +24,7 @@ SOURCES  += $(shell find src -name '*.s')
 OBJECTS  += ./src/main.o
 OBJECTS  += ./src/startup/startup.o
 OBJECTS  += ./src/core_drivers/rcc/rcc.o
+OBJECTS  += ./src/core_drivers/spi1/spi1.o
 #OBJECTS += $(SOURCES:.c,.s=.o)
 
 # Header file includes
@@ -31,6 +32,7 @@ CFLAGS   += -I ./include
 CFLAGS   += -I ./include/cmsis
 CFLAGS   += -I ./include/system
 CFLAGS   += -I ./include/core_drivers/rcc
+CFLAGS   += -I ./include/core_drivers/spi1
 
 # Processor specific flags
 CFLAGS   += -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard

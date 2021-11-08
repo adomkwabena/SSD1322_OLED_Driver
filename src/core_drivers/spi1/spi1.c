@@ -84,11 +84,11 @@ static inline void spi1_gpio_init(void)
 static inline void spi1_cr1_init(void)
 {
     // Set SPI baud rate to PCLK/2
-    SPI1->CR1 &= ~(0x07UL << SPI_CR1_BR_Pos);
+    SPI_INSTANCE->CR1 &= ~(0x07UL << SPI_CR1_BR_Pos);
     
     // Configure SPI1 as a master
     // Enable software slave management
-    SPI1->CR1 |= (SPI_CR1_MSTR | SPI_CR1_SSM | SPI_CR1_SSI);
+    SPI_INSTANCE->CR1 |= (SPI_CR1_MSTR | SPI_CR1_SSM | SPI_CR1_SSI);
 
     // Set CPOL = 0 and CPHA = 0
     // Select 8-bit data frame format
@@ -96,24 +96,24 @@ static inline void spi1_cr1_init(void)
     // Disable hardware CRC 
     // Use SPI1 in full duplex mode
     // Enable 2-line unidirectional data mode
-    SPI1->CR1 &= ~(SPI_CR1_CPOL     | SPI_CR1_CPHA  | SPI_CR1_DFF | \
+    SPI_INSTANCE->CR1 &= ~(SPI_CR1_CPOL     | SPI_CR1_CPHA  | SPI_CR1_DFF | \
                    SPI_CR1_LSBFIRST | SPI_CR1_CRCEN | SPI_CR1_RXONLY | \
                    SPI_CR1_BIDIMODE);            
 
     // Enable SPI1
-    SPI1->CR1 |= SPI_CR1_SPE;
+    SPI_INSTANCE->CR1 |= SPI_CR1_SPE;
 }
 
 static inline void spi1_cr2_init(void)
 {
     // Disable SPI1 interrupts
-    SPI1->CR2 &= ~(SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE);
+    SPI_INSTANCE->CR2 &= ~(SPI_CR2_TXEIE | SPI_CR2_RXNEIE | SPI_CR2_ERRIE);
 
     // Set SPI1 to Motorola mode
-    SPI1->CR2 &= ~(SPI_CR2_FRF);
+    SPI_INSTANCE->CR2 &= ~(SPI_CR2_FRF);
 
     // Disable SPI1 TX & RX DMA capability
-    SPI1->CR2 &= ~(SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
+    SPI_INSTANCE->CR2 &= ~(SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
 }
 
 void spi1_init(void)
@@ -136,19 +136,19 @@ void spi1_init(void)
 uint8_t spi1_transceive(uint8_t data)
 {
     // Wait for previous transfer to complete
-    while ((SPI1->SR & SPI_SR_TXE) == 0);
+    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
 
     // Send data
-    SPI1->DR = (uint32_t) data;
+    SPI_INSTANCE->DR = (uint32_t) data;
 
     // Wait for data to be received
-    while ((SPI1->SR & SPI_SR_RXNE) == 0);
+    while ((SPI_INSTANCE->SR & SPI_SR_RXNE) == 0);
 
     // Read received data
-    uint8_t received_data = (uint8_t) SPI1->DR;
+    uint8_t received_data = (uint8_t) SPI_INSTANCE->DR;
 
     // Wait for last transfer to complete
-    while ((SPI1->SR & SPI_SR_BSY));
+    while ((SPI_INSTANCE->SR & SPI_SR_BSY));
 
     return received_data;
 }
@@ -159,15 +159,15 @@ void spi1_transmit_buffer(uint8_t * buffer, uint32_t buffer_size)
     for (uint32_t i = 0; i < buffer_size; i++)
     {
         // Wait for previous transfer to complete
-        while ((SPI1->SR & SPI_SR_TXE) == 0);
+        while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
 
         // Send data
-        SPI1->DR = *((uint32_t *) buffer++);
+        SPI_INSTANCE->DR = *((uint32_t *) buffer++);
     }
 
     // Wait for last transfer to complete
-    while ((SPI1->SR & SPI_SR_TXE) == 0);
-    while ((SPI1->SR & SPI_SR_BSY));
+    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
+    while ((SPI_INSTANCE->SR & SPI_SR_BSY));
 }
 
 void spi1_receive_buffer(uint8_t * buffer, uint32_t buffer_size)
@@ -175,22 +175,22 @@ void spi1_receive_buffer(uint8_t * buffer, uint32_t buffer_size)
     for (uint32_t i = 0; i < buffer_size; i++)
     {
         // Wait for previous transfer to complete
-        while ((SPI1->SR & SPI_SR_TXE) == 0);
+        while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
 
         // Send some dummy data - this is needed to generate clock
         // pulses for the slave device to shift out data.
-        SPI1->DR = (uint32_t) 0x00;
+        SPI_INSTANCE->DR = (uint32_t) 0x00;
 
         // Wait for data to be received
-        while ((SPI1->SR & SPI_SR_RXNE) == 0);
+        while ((SPI_INSTANCE->SR & SPI_SR_RXNE) == 0);
 
         // Read received data
-        *buffer++ = (uint8_t) SPI1->DR;
+        *buffer++ = (uint8_t) SPI_INSTANCE->DR;
     }
 
     // Wait for last transfer to complete
-    while ((SPI1->SR & SPI_SR_TXE) == 0);
-    while ((SPI1->SR & SPI_SR_BSY));
+    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
+    while ((SPI_INSTANCE->SR & SPI_SR_BSY));
 }
 
 void spi1_transceive_buffer(uint8_t * tx_buffer, uint8_t * rx_buffer,
@@ -199,19 +199,19 @@ void spi1_transceive_buffer(uint8_t * tx_buffer, uint8_t * rx_buffer,
     for (uint32_t i = 0; i < buffer_size; i++)
     {
         // Wait for previous transfer to complete
-        while ((SPI1->SR & SPI_SR_TXE) == 0);
+        while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
 
         // Send data
-        SPI1->DR = *((uint32_t *) tx_buffer++);;
+        SPI_INSTANCE->DR = *((uint32_t *) tx_buffer++);;
 
         // Wait for data to be received
-        while ((SPI1->SR & SPI_SR_RXNE) == 0);
+        while ((SPI_INSTANCE->SR & SPI_SR_RXNE) == 0);
 
         // Read received data
-        *rx_buffer++ = (uint8_t) SPI1->DR;
+        *rx_buffer++ = (uint8_t) SPI_INSTANCE->DR;
     }
 
     // Wait for last transfer to complete
-    while ((SPI1->SR & SPI_SR_TXE) == 0);
-    while ((SPI1->SR & SPI_SR_BSY));
+    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
+    while ((SPI_INSTANCE->SR & SPI_SR_BSY));
 }

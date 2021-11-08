@@ -21,6 +21,10 @@
 // * Definitions and Macros.
 // ****************************************************************************
 
+// This macro aids in porting this driver to other SPI instances on the chip,
+// this is because all SPI instances share the same register set.
+#define SPI_INSTANCE SPI1
+
 // This macro is used to transmit data via the spi1_transceive command.
 #define spi1_transmit(x)   spi1_transceive((x))
 

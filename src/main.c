@@ -10,6 +10,8 @@
 
 #include "stm32f407xx.h"
 #include "gpio.h"
+#include "spi1.h"
+#include "spi1_test.h"
 
 // ****************************************************************************
 // * Application Implementation.
@@ -18,6 +20,8 @@
 int main(void)
 {
     gpio_init();
+    spi1_init();
+    spi1_test_init();
 
     while (1)
     {
@@ -26,5 +30,17 @@ int main(void)
         BLUE_LED_ON();
         GREEN_LED_ON();
         ORANGE_LED_ON();
+
+        // Run the spi1 demo - waveforms can be viewed using a logic analyzer.
+        // The pinouts for the spi1 module can be found in the 
+        // "spi1_gpio_init" function.
+        spi1_demo();
+
+        // Turn all LEDs off
+        RED_LED_OFF();
+        BLUE_LED_OFF();
+        GREEN_LED_OFF();
+        ORANGE_LED_OFF();
+
     }
 }

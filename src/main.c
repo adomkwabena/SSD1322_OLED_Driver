@@ -12,6 +12,7 @@
 #include "gpio.h"
 #include "spi1.h"
 #include "spi1_test.h"
+#include "usart1.h"
 
 // ****************************************************************************
 // * Application Implementation.
@@ -22,6 +23,7 @@ int main(void)
     gpio_init();
     spi1_init();
     spi1_test_init();
+    usart1_init();
 
     while (1)
     {
@@ -35,6 +37,7 @@ int main(void)
         // The pinouts for the spi1 module can be found in the 
         // "spi1_gpio_init" function.
         spi1_demo();
+        usart1_put_string("It is that time! ");
 
         // Turn all LEDs off
         RED_LED_OFF();

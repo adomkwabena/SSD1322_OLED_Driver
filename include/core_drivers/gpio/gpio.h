@@ -18,6 +18,7 @@
 // * Definitions and Macros
 // ****************************************************************************
 
+// Macros for LEDs on STM32F4 discovery board
 #define RED_LED_ON()      GPIOD->BSRR |= GPIO_BSRR_BS14
 #define BLUE_LED_ON()     GPIOD->BSRR |= GPIO_BSRR_BS15
 #define GREEN_LED_ON()    GPIOD->BSRR |= GPIO_BSRR_BS12
@@ -28,6 +29,9 @@
 #define GREEN_LED_OFF()   GPIOD->BSRR |= GPIO_BSRR_BR12
 #define ORANGE_LED_OFF()  GPIOD->BSRR |= GPIO_BSRR_BR13
 
+// Macros for the reset pin of the audio chip on the STM32F4 discovery board
+#define AUDIO_RST_ON()    GPIOD->BSRR |= GPIO_BSRR_BS4
+#define AUDIO_RST_OFF()   GPIOD->BSRR |= GPIO_BSRR_BR4
 
 // ****************************************************************************
 // * Function Prototypes

@@ -32,37 +32,37 @@ static inline void usart1_gpio_init(void);
 static inline void usart1_gpio_init(void)
 {
     // GPIO Configuration 
-    // TX -> PB6
-    // RX -> PB7
+    // TX -> PA9
+    // RX -> PA10
 
     // Enable GPIOA Clock
-    RCC->AHB1ENR   |= RCC_AHB1ENR_GPIOBEN;
+    RCC->AHB1ENR   |= RCC_AHB1ENR_GPIOAEN;
 
-    // Connect PB6 and PB7 to AF7 (USART1)
-    GPIOB->AFR[0]  &= ~(0xFUL << GPIO_AFRL_AFSEL6_Pos) | \
-                      ~(0xFUL << GPIO_AFRL_AFSEL7_Pos);
+    // Connect PA9 and PA10 to AF7 (USART1)
+    GPIOA->AFR[1]  &= ~(0xFUL << GPIO_AFRH_AFSEL9_Pos) | \
+                      ~(0xFUL << GPIO_AFRH_AFSEL10_Pos);
 
-    GPIOB->AFR[0]  |= (0x7UL << GPIO_AFRL_AFSEL6_Pos) | \
-                      (0x7UL << GPIO_AFRL_AFSEL7_Pos);
+    GPIOA->AFR[1]  |= (0x7UL << GPIO_AFRH_AFSEL9_Pos) | \
+                      (0x7UL << GPIO_AFRH_AFSEL10_Pos);
 
     // Configure PA9 and PA10 as alternative function I/Os
-    GPIOB->MODER   &= ~(0x3UL << GPIO_MODER_MODE6_Pos) | \
-                      ~(0x3UL << GPIO_MODER_MODE7_Pos);
+    GPIOA->MODER   &= ~(0x3UL << GPIO_MODER_MODE9_Pos) | \
+                      ~(0x3UL << GPIO_MODER_MODE10_Pos);
 
-    GPIOB->MODER   |= (0x2UL << GPIO_MODER_MODE6_Pos) | \
-                      (0x2UL << GPIO_MODER_MODE7_Pos);
+    GPIOA->MODER   |= (0x2UL << GPIO_MODER_MODE9_Pos) | \
+                      (0x2UL << GPIO_MODER_MODE10_Pos);
 
     // Configure PA9 and PA10 as very high speed I/Os
-    GPIOB->OSPEEDR |= (0x3UL << GPIO_OSPEEDR_OSPEED6_Pos) | \
-                      (0x3UL << GPIO_OSPEEDR_OSPEED7_Pos);
+    GPIOA->OSPEEDR |= (0x3UL << GPIO_OSPEEDR_OSPEED9_Pos) | \
+                      (0x3UL << GPIO_OSPEEDR_OSPEED10_Pos);
 
     // Configure PA9 and PA10 as push pull
-    GPIOB->OTYPER  &= ~(0x3UL << GPIO_OTYPER_OT6_Pos) | \
-                      ~(0x3UL << GPIO_OTYPER_OT7_Pos);
+    GPIOA->OTYPER  &= ~(0x3UL << GPIO_OTYPER_OT9_Pos) | \
+                      ~(0x3UL << GPIO_OTYPER_OT10_Pos);
 
     // Configure PA9 and PA10 as no pull
-    GPIOB->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD6_Pos) | \
-                      ~(0x3UL << GPIO_PUPDR_PUPD7_Pos);
+    GPIOA->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD9_Pos) | \
+                      ~(0x3UL << GPIO_PUPDR_PUPD10_Pos);
 }
 
 void usart1_init(void)

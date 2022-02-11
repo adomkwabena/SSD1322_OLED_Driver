@@ -23,10 +23,10 @@
 #define GREEN_LED_ON()    GPIOD->BSRR |= GPIO_BSRR_BS12
 #define ORANGE_LED_ON()   GPIOD->BSRR |= GPIO_BSRR_BS13
 
-#define RED_LED_OFF()     GPIOD->BSRR |= GPIO_BSRR_BS14
-#define BLUE_LED_OFF()    GPIOD->BSRR |= GPIO_BSRR_BS15
-#define GREEN_LED_OFF()   GPIOD->BSRR |= GPIO_BSRR_BS12
-#define ORANGE_LED_OFF()  GPIOD->BSRR |= GPIO_BSRR_BS13
+#define RED_LED_OFF()     GPIOD->BSRR |= GPIO_BSRR_BR14
+#define BLUE_LED_OFF()    GPIOD->BSRR |= GPIO_BSRR_BR15
+#define GREEN_LED_OFF()   GPIOD->BSRR |= GPIO_BSRR_BR12
+#define ORANGE_LED_OFF()  GPIOD->BSRR |= GPIO_BSRR_BR13
 
 
 // ****************************************************************************

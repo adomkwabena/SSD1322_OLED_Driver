@@ -45,11 +45,11 @@ static inline void led_gpio_init(void)
                        (0x3UL << GPIO_OSPEEDR_OSPEED4_Pos);
 
     // Configure PD4, PD12, PD13, PD14 & PD15 as push pull I/O.
-    GPIOD->OTYPER  &= ~(0x3UL << GPIO_OTYPER_OT12_Pos) | 
-                      ~(0x3UL << GPIO_OTYPER_OT13_Pos) |
-                      ~(0x3UL << GPIO_OTYPER_OT14_Pos) |
-                      ~(0x3UL << GPIO_OTYPER_OT15_Pos) |
-                      ~(0x3UL << GPIO_OTYPER_OT4_Pos);
+    GPIOD->OTYPER  &= ~(0x1UL << GPIO_OTYPER_OT12_Pos) | 
+                      ~(0x1UL << GPIO_OTYPER_OT13_Pos) |
+                      ~(0x1UL << GPIO_OTYPER_OT14_Pos) |
+                      ~(0x1UL << GPIO_OTYPER_OT15_Pos) |
+                      ~(0x1UL << GPIO_OTYPER_OT4_Pos);
 
     // Disable pull up/pull down functionality on PD4, PD12, PD13, PD14 & PD15.
     GPIOD->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD12_Pos) | 

@@ -25,6 +25,12 @@ OBJECTS  += ./src/main.o
 OBJECTS  += ./src/startup/startup.o
 OBJECTS  += ./src/core_drivers/rcc/rcc.o
 OBJECTS  += ./src/core_drivers/spi1/spi1.o
+OBJECTS  += ./src/core_drivers/usart1/usart1.o
+OBJECTS  += ./src/core_drivers/i2c1/i2c1.o
+OBJECTS  += ./src/core_drivers/spi1/spi1_test.o
+OBJECTS  += ./src/core_drivers/gpio/gpio.o
+OBJECTS  += ./src/core_drivers/i2c1/i2c1_test.o
+OBJECTS  += ./src/core_drivers/usart2/usart2.o
 #OBJECTS += $(SOURCES:.c,.s=.o)
 
 # Header file includes
@@ -33,6 +39,10 @@ CFLAGS   += -I ./include/cmsis
 CFLAGS   += -I ./include/system
 CFLAGS   += -I ./include/core_drivers/rcc
 CFLAGS   += -I ./include/core_drivers/spi1
+CFLAGS   += -I ./include/core_drivers/usart1
+CFLAGS   += -I ./include/core_drivers/i2c1
+CFLAGS   += -I ./include/core_drivers/gpio
+CFLAGS   += -I ./include/core_drivers/usart2
 
 # Processor specific flags
 CFLAGS   += -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard

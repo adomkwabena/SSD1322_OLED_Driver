@@ -12,7 +12,9 @@
 #include "gpio.h"
 #include "spi1.h"
 #include "spi1_test.h"
-#include "usart1.h"
+#include "usart2.h"
+#include "i2c1.h"
+#include "i2c1_test.h"
 
 // ****************************************************************************
 // * Application Implementation.
@@ -23,7 +25,9 @@ int main(void)
     gpio_init();
     spi1_init();
     spi1_test_init();
-    usart1_init();
+    i2c1_init();
+    usart2_init();
+
 
     while (1)
     {
@@ -33,11 +37,20 @@ int main(void)
         GREEN_LED_ON();
         ORANGE_LED_ON();
 
-        // Run the spi1 demo - waveforms can be viewed using a logic analyzer.
-        // The pinouts for the spi1 module can be found in the 
-        // "spi1_gpio_init" function.
+        // Run demos of the communication protocols.
+        // All - waveforms can be viewed using a logic analyzer.
+
+        // Run the spi1 demo 
+        // Pinout information is in the "spi1_gpio_init" function.
         spi1_demo();
-        usart1_put_string("It is that time! ");
+        // Run the i2c1 demo - ensure the right peripheral is connected,
+        // otherwise the application will hang.
+        // Pinout information is in the "i2c1_gpio_init" function.
+        i2c1_demo();
+        // Run usart2 demo
+        // Pinout information is in the "usart2_gpio_init" function.
+        // USART1 is not used here because of a GPIO conflict with i2c1
+        usart2_put_string("It is that time! ");
 
         // Turn all LEDs off
         RED_LED_OFF();

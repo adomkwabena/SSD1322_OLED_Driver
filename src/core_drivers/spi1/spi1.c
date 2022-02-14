@@ -97,8 +97,8 @@ static inline void spi1_cr1_init(void)
     // Use SPI1 in full duplex mode
     // Enable 2-line unidirectional data mode
     SPI_INSTANCE->CR1 &= ~(SPI_CR1_CPOL     | SPI_CR1_CPHA  | SPI_CR1_DFF | \
-                   SPI_CR1_LSBFIRST | SPI_CR1_CRCEN | SPI_CR1_RXONLY | \
-                   SPI_CR1_BIDIMODE);            
+                           SPI_CR1_LSBFIRST | SPI_CR1_CRCEN | SPI_CR1_RXONLY | \
+                           SPI_CR1_BIDIMODE);            
 
     // Enable SPI1
     SPI_INSTANCE->CR1 |= SPI_CR1_SPE;

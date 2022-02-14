@@ -32,37 +32,37 @@ static inline void usart2_gpio_init(void);
 static inline void usart2_gpio_init(void)
 {
     // GPIO Configuration 
-    // TX -> PA2
-    // RX -> PA3
+    // TX -> PD5
+    // RX -> PD6
 
     // Enable GPIOA Clock
-    RCC->AHB1ENR   |= RCC_AHB1ENR_GPIOAEN;
+    RCC->AHB1ENR   |= RCC_AHB1ENR_GPIODEN;
 
-    // Connect PA2 and PA3 to AF7 (USART2)
-    GPIOA->AFR[0]  &= ~(0xFUL << GPIO_AFRL_AFSEL2_Pos) | \
-                      ~(0xFUL << GPIO_AFRL_AFSEL3_Pos);
+    // Connect PD5 and PD6 to AF7 (USART2)
+    GPIOD->AFR[0]  &= ~(0xFUL << GPIO_AFRL_AFSEL5_Pos) | \
+                      ~(0xFUL << GPIO_AFRL_AFSEL6_Pos);
 
-    GPIOA->AFR[0]  |= (0x7UL << GPIO_AFRL_AFSEL2_Pos) | \
-                      (0x7UL << GPIO_AFRL_AFSEL3_Pos);
+    GPIOD->AFR[0]  |= (0x7UL << GPIO_AFRL_AFSEL5_Pos) | \
+                      (0x7UL << GPIO_AFRL_AFSEL6_Pos);
 
     // Configure PA2 and PA3 as alternative function I/Os
-    GPIOA->MODER   &= ~(0x3UL << GPIO_MODER_MODE2_Pos) | \
-                      ~(0x3UL << GPIO_MODER_MODE3_Pos);
+    GPIOD->MODER   &= ~(0x3UL << GPIO_MODER_MODE5_Pos) | \
+                      ~(0x3UL << GPIO_MODER_MODE6_Pos);
 
-    GPIOA->MODER   |= (0x2UL << GPIO_MODER_MODE2_Pos) | \
-                      (0x2UL << GPIO_MODER_MODE3_Pos);
+    GPIOD->MODER   |= (0x2UL << GPIO_MODER_MODE5_Pos) | \
+                      (0x2UL << GPIO_MODER_MODE6_Pos);
 
     // Configure PA2 and PA3 as very high speed I/Os
-    GPIOA->OSPEEDR |= (0x3UL << GPIO_OSPEEDR_OSPEED2_Pos) | \
-                      (0x3UL << GPIO_OSPEEDR_OSPEED3_Pos);
+    GPIOD->OSPEEDR |= (0x3UL << GPIO_OSPEEDR_OSPEED5_Pos) | \
+                      (0x3UL << GPIO_OSPEEDR_OSPEED6_Pos);
 
     // Configure PA2 and PA3 as push pull
-    GPIOA->OTYPER  &= ~(0x1UL << GPIO_OTYPER_OT2_Pos) | \
-                      ~(0x1UL << GPIO_OTYPER_OT3_Pos);
+    GPIOD->OTYPER  &= ~(0x1UL << GPIO_OTYPER_OT5_Pos) | \
+                      ~(0x1UL << GPIO_OTYPER_OT6_Pos);
 
     // Configure PA2 and PA3 as no pull
-    GPIOA->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD2_Pos) | \
-                      ~(0x3UL << GPIO_PUPDR_PUPD3_Pos);
+    GPIOD->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD5_Pos) | \
+                      ~(0x3UL << GPIO_PUPDR_PUPD6_Pos);
 }
 
 void usart2_init(void)

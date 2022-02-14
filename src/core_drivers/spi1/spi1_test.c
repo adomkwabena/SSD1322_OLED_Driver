@@ -88,7 +88,7 @@ void spi1_test_init(void)
     GPIOA->OSPEEDR |=  (0x3UL << GPIO_OSPEEDR_OSPEED3_Pos);
 
     // Configure PA3 as a push pull I/O.
-    GPIOA->OTYPER  &= ~(0x3UL << GPIO_OTYPER_OT3_Pos);
+    GPIOA->OTYPER  &= ~(0x1UL << GPIO_OTYPER_OT3_Pos);
 
     // Disable pull up/pull down functionality on PA3.
     GPIOA->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD3_Pos); 

@@ -50,6 +50,9 @@ CFLAGS   += -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 # Compiler flags to compile for code size
 CFLAGS   += -O0 -flto -Wall -ffunction-sections -fdata-sections -fno-builtin
 
+# Enable debugging data
+CFLAGS   += -g3 -gdwarf-2
+
 # Linker flags to link for code size
 LFLAGS   += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
 

@@ -1,8 +1,10 @@
 ###############################################################################
 # A template Makefile for ST's Cortex-M4 MCUs      
-# Reference: https://github.com/vkottler/diymore-stm32f407/blob/master/Makefile                  
+#
+# References: 
+# https://github.com/vkottler/diymore-stm32f407/blob/master/Makefile   
+# https://interrupt.memfault.com/blog/gnu-make-guidelines                        
 ###############################################################################
-
 
 ###############################################################################
 # Definitions
@@ -16,33 +18,21 @@ CC        = arm-none-eabi-gcc
 
 # Sources
 SOURCES  += $(shell find src -name '*.c')
-SOURCES  += $(shell find src -name '*.s')
-#SOURCES += ./src/main.c
-#SOURCES += ./src/core_drivers/rcc/rcc.c
 
 # Objects
-OBJECTS  += ./src/main.o
-OBJECTS  += ./src/startup/startup.o
-OBJECTS  += ./src/core_drivers/rcc/rcc.o
-OBJECTS  += ./src/core_drivers/spi1/spi1.o
-OBJECTS  += ./src/core_drivers/usart1/usart1.o
-OBJECTS  += ./src/core_drivers/i2c1/i2c1.o
-OBJECTS  += ./src/core_drivers/spi1/spi1_test.o
-OBJECTS  += ./src/core_drivers/gpio/gpio.o
-OBJECTS  += ./src/core_drivers/i2c1/i2c1_test.o
-OBJECTS  += ./src/core_drivers/usart2/usart2.o
-#OBJECTS += $(SOURCES:.c,.s=.o)
+OBJECTS  += $(SOURCES:.c=.o)
+OBJECTS  += src/startup/startup.o
 
 # Header file includes
-CFLAGS   += -I ./include
-CFLAGS   += -I ./include/cmsis
-CFLAGS   += -I ./include/system
-CFLAGS   += -I ./include/core_drivers/rcc
-CFLAGS   += -I ./include/core_drivers/spi1
-CFLAGS   += -I ./include/core_drivers/usart1
-CFLAGS   += -I ./include/core_drivers/i2c1
-CFLAGS   += -I ./include/core_drivers/gpio
-CFLAGS   += -I ./include/core_drivers/usart2
+CFLAGS   += -Iinclude/
+CFLAGS   += -Iinclude/cmsis/
+CFLAGS   += -Iinclude/system/
+CFLAGS   += -Iinclude/core_drivers/rcc/
+CFLAGS   += -Iinclude/core_drivers/spi1/
+CFLAGS   += -Iinclude/core_drivers/usart1/
+CFLAGS   += -Iinclude/core_drivers/i2c1/
+CFLAGS   += -Iinclude/core_drivers/gpio/
+CFLAGS   += -Iinclude/core_drivers/usart2/
 
 # Processor specific flags
 CFLAGS   += -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
@@ -54,7 +44,7 @@ CFLAGS   += -O0 -flto -Wall -ffunction-sections -fdata-sections -fno-builtin
 CFLAGS   += -g3 -gdwarf-2
 
 # Linker flags to link for code size
-LDFLAGS   += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
+LDFLAGS  += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
 
 # Dependency flags
 DEPFLAGS += -MMD -MP -MF $<.d
@@ -93,7 +83,7 @@ clean:
 	@rm -f *.bin *.elf
 	@find . -name "*.o" -delete
 	@find . -name "*.d*" -delete
-	@echo "Done."
+	@echo "Done!"
 
 
 ###############################################################################

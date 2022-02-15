@@ -13,6 +13,9 @@
 # Project
 PROJECT   = stm32f4_proj_template
 
+# Build directory
+BUILD_DIR := build
+
 # Compiler & Linker
 CC        = arm-none-eabi-gcc
 
@@ -20,8 +23,8 @@ CC        = arm-none-eabi-gcc
 SOURCES  += $(shell find src -name '*.c')
 
 # Objects
-OBJECTS  += $(SOURCES:.c=.o)
-OBJECTS  += src/startup/startup.o
+OBJECTS  += $(addprefix $(BUILD_DIR)/,$(SOURCES:.c=.o))
+OBJECTS  += $(BUILD_DIR)/src/startup/startup.o
 
 # Header file includes
 CFLAGS   += -Iinclude/
@@ -47,7 +50,7 @@ CFLAGS   += -g3 -gdwarf-2
 LDFLAGS  += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
 
 # Dependency flags
-DEPFLAGS += -MMD -MP -MF $<.d
+DEPFLAGS += -MMD -MP -MF $@.d
 
 # Include dependencies
 include $(shell find . -name "*.d")
@@ -59,30 +62,37 @@ include $(shell find . -name "*.d")
 # Target
 .DEFAULT_GOAL = all
 .PHONY: all
-all: $(PROJECT).bin
+all: $(BUILD_DIR)/$(PROJECT).bin
+
+# Create a build directory before generating objects
+$(OBJECTS): | $(BUILD_DIR)
+
+# Rule for actually creating the build directory
+$(BUILD_DIR):
+	@mkdir -p $@
 
 # Assembly source rule
-%.o: %.S
-	$(CC) $(CFLAGS) $(DEPFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: %.S
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
 # C source rule
-%.o: %.c
-	$(CC) $(CFLAGS) $(DEPFLAGS) -c -o $@ $<
+$(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
 # Linker - generate .elf file
-$(PROJECT).elf: $(OBJECTS)
+$(BUILD_DIR)/$(PROJECT).elf: $(OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 # Generate .bin file
-$(PROJECT).bin: $(PROJECT).elf
+$(BUILD_DIR)/$(PROJECT).bin: $(BUILD_DIR)/$(PROJECT).elf
 	arm-none-eabi-objcopy -O binary $< $@
 
 .PHONY: clean
 clean:
 	@echo "Deleting all build outputs ..."
-	@rm -f *.bin *.elf
-	@find . -name "*.o" -delete
-	@find . -name "*.d*" -delete
+	@rm -rf $(BUILD_DIR)
 	@echo "Done!"
 
 
@@ -92,4 +102,4 @@ clean:
 
 .PHONY: burn
 burn:
-	st-flash --reset write $(PROJECT).bin 0x8000000
+	st-flash --reset write $(BUILD_DIR)/$(PROJECT).bin 0x8000000

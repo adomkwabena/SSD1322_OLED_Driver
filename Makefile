@@ -54,8 +54,13 @@ CFLAGS   += -O0 -flto -Wall -ffunction-sections -fdata-sections -fno-builtin
 CFLAGS   += -g3 -gdwarf-2
 
 # Linker flags to link for code size
-LFLAGS   += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
+LDFLAGS   += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
 
+# Dependency flags
+DEPFLAGS += -MMD -MP -MF $<.d
+
+# Include dependencies
+include $(shell find . -name "*.d")
 
 ###############################################################################
 # Compiling and Linking
@@ -66,30 +71,21 @@ LFLAGS   += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
 .PHONY: all
 all: $(PROJECT).bin
 
-# Automatic prerequisite generation
-%.d: %.c
-	@set -e; rm -f $@; \
-	$(CC) -MM $(CFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
-
 # Assembly source rule
 %.o: %.S
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(DEPFLAGS) -c -o $@ $<
 
 # C source rule
 %.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(DEPFLAGS) -c -o $@ $<
 
 # Linker - generate .elf file
 $(PROJECT).elf: $(OBJECTS)
-	$(CC) $(LFLAGS) $^ $(CFLAGS) -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 # Generate .bin file
 $(PROJECT).bin: $(PROJECT).elf
 	arm-none-eabi-objcopy -O binary $< $@
-
-include $(SOURCES:.c=.d)
 
 .PHONY: clean
 clean:

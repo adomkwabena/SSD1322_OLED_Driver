@@ -11,48 +11,48 @@
 ###############################################################################
 
 # Project
-PROJECT   = stm32f4_proj_template
+PROJECT    = stm32f4_proj_template
 
 # Build directory
 BUILD_DIR := build
 
 # Compiler & Linker
-CC        = arm-none-eabi-gcc
+CC         = arm-none-eabi-gcc
 
 # Sources
-SOURCES  += $(shell find src -name '*.c')
+SOURCES   += $(shell find src -name '*.c')
 
 # Objects
-OBJECTS  += $(addprefix $(BUILD_DIR)/,$(SOURCES:.c=.o))
-OBJECTS  += $(BUILD_DIR)/src/startup/startup.o
+OBJECTS   += $(addprefix $(BUILD_DIR)/,$(SOURCES:.c=.o))
+OBJECTS   += $(BUILD_DIR)/src/startup/startup.o
 
-# Header file includes
-CFLAGS   += -Iinclude/
-CFLAGS   += -Iinclude/cmsis/
-CFLAGS   += -Iinclude/system/
-CFLAGS   += -Iinclude/core_drivers/rcc/
-CFLAGS   += -Iinclude/core_drivers/spi1/
-CFLAGS   += -Iinclude/core_drivers/usart1/
-CFLAGS   += -Iinclude/core_drivers/i2c1/
-CFLAGS   += -Iinclude/core_drivers/gpio/
-CFLAGS   += -Iinclude/core_drivers/usart2/
+# Header file include directories
+CFLAGS    += -Iinclude/
+CFLAGS    += -Iinclude/cmsis/
+CFLAGS    += -Iinclude/system/
+CFLAGS    += -Iinclude/core_drivers/rcc/
+CFLAGS    += -Iinclude/core_drivers/spi1/
+CFLAGS    += -Iinclude/core_drivers/usart1/
+CFLAGS    += -Iinclude/core_drivers/i2c1/
+CFLAGS    += -Iinclude/core_drivers/gpio/
+CFLAGS    += -Iinclude/core_drivers/usart2/
 
 # Processor specific flags
-CFLAGS   += -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+CFLAGS    += -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
 # Compiler flags to compile for code size
-CFLAGS   += -O0 -flto -Wall -ffunction-sections -fdata-sections -fno-builtin
+CFLAGS    += -O0 -flto -Wall -ffunction-sections -fdata-sections -fno-builtin
 
 # Enable debugging data
-CFLAGS   += -g3 -gdwarf-2
+CFLAGS    += -g3 -gdwarf-2
 
 # Linker flags to link for code size
-LDFLAGS  += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
+LDFLAGS   += -Wl,--gc-sections --specs=nosys.specs -Tlinker_script.ld
 # Generate a map file
-LDFLAGS  += -Wl,-Map=$@.map
+LDFLAGS   += -Wl,-Map=$@.map
 
 # Dependency flags
-DEPFLAGS += -MMD -MP -MF $@.d
+DEPFLAGS  += -MMD -MP -MF $@.d
 
 # Include dependencies
 include $(shell find . -name "*.d")
@@ -74,16 +74,18 @@ $(BUILD_DIR):
 	@mkdir -p $@
 
 # Assembly source rule
+# Create the folder structure for the output file before compiling
 $(BUILD_DIR)/%.o: %.S
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
 # C source rule
+# Create the folder structure for the output file before compiling
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
-# Linker - generate .elf file
+# Invoke linker to generate .elf file
 $(BUILD_DIR)/$(PROJECT).elf: $(OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
@@ -91,6 +93,7 @@ $(BUILD_DIR)/$(PROJECT).elf: $(OBJECTS)
 $(BUILD_DIR)/$(PROJECT).bin: $(BUILD_DIR)/$(PROJECT).elf
 	arm-none-eabi-objcopy -O binary $< $@
 
+# Remove compiler outputs
 .PHONY: clean
 clean:
 	@echo "Deleting all build outputs ..."

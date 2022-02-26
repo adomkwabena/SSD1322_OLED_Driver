@@ -87,6 +87,13 @@ void spi1_generate_waveform_5(void);
 void spi1_generate_waveform_6(void);
 
 /**
+ *  @brief   Generates waveforms using the "spi1_transceive" function.
+ *  @param   None.
+ *  @returns None.
+ */
+void spi1_generate_waveform_7(void);
+
+/**
  *  @brief   Runs all waveform generation functions to provide a demo.
  *  @param   None.
  *  @returns None.

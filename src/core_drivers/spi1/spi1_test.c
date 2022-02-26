@@ -12,6 +12,7 @@
 #include "stm32f407xx.h"
 #include "spi1_test.h"
 #include "spi1.h"
+#include "usart2.h"
 
 // ****************************************************************************
 // * Private Functions
@@ -182,6 +183,21 @@ void spi1_generate_waveform_6(void)
     __spi1_transmit_buffer__(rx_buffer, 5);
 }
 
+void spi1_generate_waveform_7(void)
+{
+    // Test full duplex capability.
+    // Tie MISO to MOSI and verify that the following sequence is received:
+    // [0xCC, 0xCC, 0xDD, 0xDD, 0xEE, 0xEE].
+
+    uint8_t data = 0xFF;
+    data = __spi1_transceive__(0xCC);
+    data = __spi1_transceive__(data);
+    data = __spi1_transceive__(0xDD);
+    data = __spi1_transceive__(data);
+    data = __spi1_transceive__(0xEE);
+    data = __spi1_transceive__(data);
+}
+
 void spi1_demo(void)
 {
     spi1_generate_waveform_1();
@@ -190,4 +206,5 @@ void spi1_demo(void)
     spi1_generate_waveform_4();
     spi1_generate_waveform_5();
     spi1_generate_waveform_6();
+    spi1_generate_waveform_7();
 }

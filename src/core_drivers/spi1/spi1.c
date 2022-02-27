@@ -56,29 +56,37 @@ static inline void spi1_gpio_init(void)
     RCC->AHB1ENR   |= RCC_AHB1ENR_GPIOAEN;
 
     // Connect PA5, PA6 and PA7 to AF5 (SPI1)
-    GPIOA->AFR[0]  |=  (0x5UL << GPIO_AFRL_AFSEL5_Pos) | \
-                       (0x5UL << GPIO_AFRL_AFSEL6_Pos) | \
-                       (0x5UL << GPIO_AFRL_AFSEL7_Pos);
+    GPIOA->AFR[0]  &= ~((0xFUL << GPIO_AFRL_AFSEL5_Pos) | \
+                        (0xFUL << GPIO_AFRL_AFSEL6_Pos) | \
+                        (0xFUL << GPIO_AFRL_AFSEL7_Pos));
+
+    GPIOA->AFR[0]  |=   (0x5UL << GPIO_AFRL_AFSEL5_Pos) | \
+                        (0x5UL << GPIO_AFRL_AFSEL6_Pos) | \
+                        (0x5UL << GPIO_AFRL_AFSEL7_Pos);
 
     // Configure PA5, PA6 and PA7 as alternate function I/Os
-    GPIOA->MODER   |=  (0x2UL << GPIO_MODER_MODER5_Pos) | \
-                       (0x2UL << GPIO_MODER_MODER6_Pos) | \
-                       (0x2UL << GPIO_MODER_MODER7_Pos);
+    GPIOA->MODER   &= ~((0x3UL << GPIO_MODER_MODER5_Pos) | \
+                        (0x3UL << GPIO_MODER_MODER6_Pos) | \
+                        (0x3UL << GPIO_MODER_MODER7_Pos));
+
+    GPIOA->MODER   |=   (0x2UL << GPIO_MODER_MODER5_Pos) | \
+                        (0x2UL << GPIO_MODER_MODER6_Pos) | \
+                        (0x2UL << GPIO_MODER_MODER7_Pos);
 
     // Configure PA5, PA6 and PA7 as very high speed I/Os
-    GPIOA->OSPEEDR |=  (0x3UL << GPIO_OSPEEDR_OSPEED5_Pos) | \
-                       (0x3UL << GPIO_OSPEEDR_OSPEED6_Pos) | \
-                       (0x3UL << GPIO_OSPEEDR_OSPEED7_Pos);
+    GPIOA->OSPEEDR |=   (0x3UL << GPIO_OSPEEDR_OSPEED5_Pos) | \
+                        (0x3UL << GPIO_OSPEEDR_OSPEED6_Pos) | \
+                        (0x3UL << GPIO_OSPEEDR_OSPEED7_Pos);
 
     // Configure PA5, PA6 and PA7 as push pull
-    GPIOA->OTYPER  |=  (0x0UL << GPIO_OTYPER_OT5_Pos) | \
-                       (0x0UL << GPIO_OTYPER_OT6_Pos) | \
-                       (0x0UL << GPIO_OTYPER_OT7_Pos);
+    GPIOA->OTYPER  &= ~((0x1UL << GPIO_OTYPER_OT5_Pos) | \
+                        (0x1UL << GPIO_OTYPER_OT6_Pos) | \
+                        (0x1UL << GPIO_OTYPER_OT7_Pos));
 
     // Configure PA5, PA6 and PA7 as no pull
-    GPIOA->PUPDR   |=  (0x0UL << GPIO_PUPDR_PUPD5_Pos) | \
-                       (0x0UL << GPIO_PUPDR_PUPD6_Pos) | \
-                       (0x0UL << GPIO_PUPDR_PUPD7_Pos);        
+    GPIOA->PUPDR   &= ~((0x3UL << GPIO_PUPDR_PUPD5_Pos) | \
+                        (0x3UL << GPIO_PUPDR_PUPD6_Pos) | \
+                        (0x3UL << GPIO_PUPDR_PUPD7_Pos));        
 }
 
 static inline void spi1_cr1_init(void)

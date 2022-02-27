@@ -168,6 +168,11 @@ void spi1_transmit_buffer(uint8_t * buffer, uint32_t buffer_size)
     // Wait for last transfer to complete
     while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
     while ((SPI_INSTANCE->SR & SPI_SR_BSY));
+
+    // Clear the overrun flag because we don't need to read the DR here.
+    // This is done by reading the data register and then the status register.
+    uint8_t data __attribute__((unused)) = SPI_INSTANCE->DR;
+    data = SPI_INSTANCE->SR;
 }
 
 void spi1_receive_buffer(uint8_t * buffer, uint32_t buffer_size)

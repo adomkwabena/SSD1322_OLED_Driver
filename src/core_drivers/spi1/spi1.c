@@ -148,7 +148,8 @@ uint8_t spi1_transceive(uint8_t data)
     uint8_t received_data = (uint8_t) SPI_INSTANCE->DR;
 
     // Wait for last transfer to complete
-    while ((SPI_INSTANCE->SR & SPI_SR_BSY));
+    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0 || \
+           (SPI_INSTANCE->SR & SPI_SR_BSY));
 
     return received_data;
 }
@@ -166,8 +167,8 @@ void spi1_transmit_buffer(uint8_t * buffer, uint32_t buffer_size)
     }
 
     // Wait for last transfer to complete
-    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
-    while ((SPI_INSTANCE->SR & SPI_SR_BSY));
+    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0 || \
+           (SPI_INSTANCE->SR & SPI_SR_BSY));
 
     // Clear the overrun flag because we don't need to read the DR here.
     // This is done by reading the data register and then the status register.
@@ -194,8 +195,8 @@ void spi1_receive_buffer(uint8_t * buffer, uint32_t buffer_size)
     }
 
     // Wait for last transfer to complete
-    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
-    while ((SPI_INSTANCE->SR & SPI_SR_BSY));
+    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0 || \
+           (SPI_INSTANCE->SR & SPI_SR_BSY));
 }
 
 void spi1_transceive_buffer(uint8_t * tx_buffer, uint8_t * rx_buffer,
@@ -217,6 +218,6 @@ void spi1_transceive_buffer(uint8_t * tx_buffer, uint8_t * rx_buffer,
     }
 
     // Wait for last transfer to complete
-    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
-    while ((SPI_INSTANCE->SR & SPI_SR_BSY));
+    while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0 || \
+           (SPI_INSTANCE->SR & SPI_SR_BSY));
 }

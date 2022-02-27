@@ -15,6 +15,7 @@
 #include "usart2.h"
 #include "i2c1.h"
 #include "i2c1_test.h"
+#include "delay.h"
 
 // ****************************************************************************
 // * Application Implementation.
@@ -27,6 +28,7 @@ int main(void)
     spi1_test_init();
     i2c1_init();
     usart2_init();
+    delay_init();
 
 
     while (1)
@@ -36,6 +38,9 @@ int main(void)
         BLUE_LED_ON();
         GREEN_LED_ON();
         ORANGE_LED_ON();
+
+        // Wait for 200ms
+        delay_ms(200);
 
         // Run demos of the communication protocols.
         // All - waveforms can be viewed using a logic analyzer.
@@ -57,6 +62,9 @@ int main(void)
         BLUE_LED_OFF();
         GREEN_LED_OFF();
         ORANGE_LED_OFF();
+
+        // Wait for 200ms
+        delay_ms(200);
 
     }
 }

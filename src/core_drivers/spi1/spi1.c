@@ -162,7 +162,7 @@ void spi1_transmit_buffer(uint8_t * buffer, uint32_t buffer_size)
         while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
 
         // Send data
-        SPI_INSTANCE->DR = *((uint32_t *) buffer++);
+        SPI_INSTANCE->DR = *buffer++;
     }
 
     // Wait for last transfer to complete
@@ -207,7 +207,7 @@ void spi1_transceive_buffer(uint8_t * tx_buffer, uint8_t * rx_buffer,
         while ((SPI_INSTANCE->SR & SPI_SR_TXE) == 0);
 
         // Send data
-        SPI_INSTANCE->DR = *((uint32_t *) tx_buffer++);;
+        SPI_INSTANCE->DR = *tx_buffer++;
 
         // Wait for data to be received
         while ((SPI_INSTANCE->SR & SPI_SR_RXNE) == 0);

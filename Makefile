@@ -30,13 +30,7 @@ OBJECTS   += $(BUILD_DIR)/src/startup/startup.o
 CFLAGS    += -Iinclude/
 CFLAGS    += -Iinclude/cmsis/
 CFLAGS    += -Iinclude/system/
-CFLAGS    += -Iinclude/core_drivers/rcc/
-CFLAGS    += -Iinclude/core_drivers/spi1/
-CFLAGS    += -Iinclude/core_drivers/usart1/
-CFLAGS    += -Iinclude/core_drivers/i2c1/
-CFLAGS    += -Iinclude/core_drivers/gpio/
-CFLAGS    += -Iinclude/core_drivers/usart2/
-CFLAGS    += -Iinclude/core_drivers/delay/
+CFLAGS    += -Iinclude/core_drivers/
 
 # Processor specific flags
 CFLAGS    += -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard

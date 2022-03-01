@@ -10,8 +10,21 @@
 #define     __I2C1_TEST_INC__
 
 // ****************************************************************************
+// * Definitions and Macros
+// ****************************************************************************
+
+// Macros for the reset pin of the audio chip on the STM32F4 discovery board
+#define AUDIO_RST_ON()    GPIOD->BSRR |= GPIO_BSRR_BS4
+#define AUDIO_RST_OFF()   GPIOD->BSRR |= GPIO_BSRR_BR4
+
+// ****************************************************************************
 // * Function Prototypes
 // ****************************************************************************
+
+/**
+ *  @brief Performs initialization needed to test the i2c1 module.
+ */
+void i2c1_test_init(void);
 
 /**
  *  @brief Generate an i2c1 demo using connected peripherals.

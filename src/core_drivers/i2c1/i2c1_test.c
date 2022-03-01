@@ -12,7 +12,6 @@
 #include "stm32f407xx.h"
 #include "i2c1_test.h"
 #include "i2c1.h"
-#include "gpio.h"
 
 // ****************************************************************************
 // * Private Functions
@@ -80,6 +79,29 @@ static inline void i2c1_cs43l22_demo(void)
 // ****************************************************************************
 // * Module APIs
 // ****************************************************************************
+
+void i2c1_test_init(void)
+{
+    // Initialize PD4 as a GPIO.
+    // PD4 is connected to the enable pin of the CS43L22 chip on board 
+    // the STM32F4 discovery board.
+
+    // Enable GPIOD clock
+    RCC->AHB1ENR   |=  RCC_AHB1ENR_GPIODEN;
+
+    // Configure PD4 as an output I/O.
+    GPIOD->MODER   &= ~(0x3UL << GPIO_MODER_MODER4_Pos);
+    GPIOD->MODER   |=  (0x1UL << GPIO_MODER_MODER4_Pos);
+
+    // Configure PD4 as a very high speed I/O.
+    GPIOD->OSPEEDR |=  (0x3UL << GPIO_OSPEEDR_OSPEED4_Pos);
+
+    // Configure PD4 as a push pull I/O.
+    GPIOD->OTYPER  &= ~(0x1UL << GPIO_OTYPER_OT4_Pos);
+
+    // Disable pull up/pull down functionality on PD4.
+    GPIOD->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD4_Pos); 
+}
 
 void i2c1_demo(void)
 {

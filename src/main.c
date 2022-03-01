@@ -27,6 +27,7 @@ int main(void)
     spi1_init();
     spi1_test_init();
     i2c1_init();
+    i2c1_test_init();
     usart2_init();
     delay_init();
 

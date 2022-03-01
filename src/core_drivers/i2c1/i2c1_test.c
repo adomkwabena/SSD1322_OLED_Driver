@@ -100,7 +100,9 @@ void i2c1_test_init(void)
     GPIOD->OTYPER  &= ~(0x1UL << GPIO_OTYPER_OT4_Pos);
 
     // Disable pull up/pull down functionality on PD4.
-    GPIOD->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD4_Pos); 
+    GPIOD->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD4_Pos);
+
+    i2c1_init(); 
 }
 
 void i2c1_demo(void)

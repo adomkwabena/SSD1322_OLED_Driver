@@ -95,6 +95,8 @@ void spi1_test_init(void)
     GPIOA->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD3_Pos); 
 
     SPI1_CS_HIGH();
+
+    spi1_init();
 }
 
 void spi1_generate_waveform_1(void)

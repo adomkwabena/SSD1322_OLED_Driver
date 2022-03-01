@@ -12,7 +12,6 @@
 #include "stm32f407xx.h"
 #include "spi1_test.h"
 #include "spi1.h"
-#include "usart2.h"
 
 // ****************************************************************************
 // * Private Functions

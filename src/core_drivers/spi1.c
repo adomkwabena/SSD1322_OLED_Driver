@@ -118,9 +118,11 @@ static inline void spi1_cr1_init(uint8_t mode)
             SPI_INSTANCE->CR1 |= (SPI_CR1_CPOL | SPI_CR1_CPHA);
         break;
 
+        case SPI_MODE_0:
         default:
             // Set CPOL = 0 and CPHA = 0 -> mode 0
             SPI_INSTANCE->CR1 &= ~(SPI_CR1_CPOL | SPI_CR1_CPHA);
+        break;
     }
 
     // Select 8-bit data frame format

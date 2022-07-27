@@ -95,7 +95,7 @@ void spi1_test_init(void)
 
     SPI1_CS_HIGH();
 
-    spi1_init();
+    spi1_init(SPI_MODE_0);
 }
 
 void spi1_generate_waveform_1(void)

@@ -21,6 +21,12 @@
 // * Definitions and Macros.
 // ****************************************************************************
 
+// Possible SPI modes
+#define SPI_MODE_0      0xA1 
+#define SPI_MODE_1      0xB2
+#define SPI_MODE_2      0xC3
+#define SPI_MODE_3      0xD4
+
 // This macro aids in porting this driver to other SPI instances on the chip,
 // this is because all SPI instances share the same register set.
 #define SPI_INSTANCE SPI1
@@ -38,10 +44,10 @@
 
 /**
  *  @brief   Initialize the spi1 module as a master in full duplex mode.
- *  @param   None.
+ *  @param   mode: Selects the mode (phase & polarity) of SPI data transmission.
  *  @returns None.
  */
-void spi1_init();
+void spi1_init(uint8_t mode);
 
 /**
  *  @brief   Transmits and receives 8 bits of data via the SPI1 peripheral.

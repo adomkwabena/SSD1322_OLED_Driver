@@ -31,7 +31,7 @@ static inline void spi1_gpio_init(void);
  *  @param   None.
  *  @returns None.
  */
-static inline void spi1_cr1_init(void);
+static inline void spi1_cr1_init(uint8_t mode);
 
 /**
  *  @brief   Initialize CR2 register of SPI1.
@@ -89,7 +89,7 @@ static inline void spi1_gpio_init(void)
                         (0x3UL << GPIO_PUPDR_PUPD7_Pos));        
 }
 
-static inline void spi1_cr1_init(void)
+static inline void spi1_cr1_init(uint8_t mode)
 {
     // Set SPI baud rate to PCLK/2
     SPI_INSTANCE->CR1 &= ~(0x07UL << SPI_CR1_BR_Pos);
@@ -98,15 +98,38 @@ static inline void spi1_cr1_init(void)
     // Enable software slave management
     SPI_INSTANCE->CR1 |= (SPI_CR1_MSTR | SPI_CR1_SSM | SPI_CR1_SSI);
 
-    // Set CPOL = 0 and CPHA = 0
+    // Select SPI1 phase and polarity
+    switch (mode)
+    {
+        case SPI_MODE_1:
+            // Set CPOL = 0 and CPHA = 1
+            SPI_INSTANCE->CR1 &= ~SPI_CR1_CPOL;
+            SPI_INSTANCE->CR1 |=  SPI_CR1_CPHA;
+        break;
+
+        case SPI_MODE_2:
+            // Set CPOL = 1 and CPHA = 0
+            SPI_INSTANCE->CR1 |=  SPI_CR1_CPOL;
+            SPI_INSTANCE->CR1 &= ~SPI_CR1_CPHA;
+        break;
+
+        case SPI_MODE_3:
+            // Set CPOL = 1 and CPHA = 1
+            SPI_INSTANCE->CR1 |= (SPI_CR1_CPOL | SPI_CR1_CPHA);
+        break;
+
+        default:
+            // Set CPOL = 0 and CPHA = 0 -> mode 0
+            SPI_INSTANCE->CR1 &= ~(SPI_CR1_CPOL | SPI_CR1_CPHA);
+    }
+
     // Select 8-bit data frame format
     // Data is transmitted MSB first
     // Disable hardware CRC 
     // Use SPI1 in full duplex mode
     // Enable 2-line unidirectional data mode
-    SPI_INSTANCE->CR1 &= ~(SPI_CR1_CPOL     | SPI_CR1_CPHA  | SPI_CR1_DFF | \
-                           SPI_CR1_LSBFIRST | SPI_CR1_CRCEN | SPI_CR1_RXONLY | \
-                           SPI_CR1_BIDIMODE);            
+    SPI_INSTANCE->CR1 &= ~(SPI_CR1_DFF    | SPI_CR1_LSBFIRST | SPI_CR1_CRCEN | 
+                           SPI_CR1_RXONLY | SPI_CR1_BIDIMODE);            
 
     // Enable SPI1
     SPI_INSTANCE->CR1 |= SPI_CR1_SPE;
@@ -124,7 +147,7 @@ static inline void spi1_cr2_init(void)
     SPI_INSTANCE->CR2 &= ~(SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
 }
 
-void spi1_init(void)
+void spi1_init(uint8_t mode)
 {
     // Enable SPI1 peripheral
     RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
@@ -138,7 +161,7 @@ void spi1_init(void)
     // Initialize control register 1 settings.
     // This is called last because the last statement
     // of the spi1_cr1_init() function enables the SPI1 module.
-    spi1_cr1_init();
+    spi1_cr1_init(mode);
 }
 
 uint8_t spi1_transceive(uint8_t data)

@@ -102,6 +102,18 @@ clean:
 # Programming
 ###############################################################################
 
+# Programming via st-link
 .PHONY: burn
 burn:
 	st-flash --reset write $(BUILD_DIR)/$(PROJECT).bin 0x8000000
+
+# Programming via JLink
+JLINK_FILE = ./temp.jlink
+JLINK_ARGS = -device STM32F407VG -if SWD -speed 4000 -autoconnect 1
+.PHONY: flash
+flash:
+	@echo "loadbin $(BUILD_DIR)/$(PROJECT).bin, 0x08000000"  > $(JLINK_FILE)
+	@echo "r"                                               >> $(JLINK_FILE)
+	@echo "exit"                                            >> $(JLINK_FILE)
+	JLinkExe $(JLINK_ARGS) -CommanderScript $(JLINK_FILE)
+	@rm $(JLINK_FILE)

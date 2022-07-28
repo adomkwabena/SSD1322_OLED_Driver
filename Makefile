@@ -11,7 +11,7 @@
 ###############################################################################
 
 # Project
-PROJECT    = stm32f4_proj_template
+PROJECT    = ssd1322_oled
 
 # Build directory
 BUILD_DIR := build
@@ -31,6 +31,8 @@ CFLAGS    += -Iinclude/
 CFLAGS    += -Iinclude/cmsis/
 CFLAGS    += -Iinclude/system/
 CFLAGS    += -Iinclude/core_drivers/
+CFLAGS    += -Iinclude/device_drivers/ssd1322
+CFLAGS    += -Iinclude/util
 
 # Processor specific flags
 CFLAGS    += -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard

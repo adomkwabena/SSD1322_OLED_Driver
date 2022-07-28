@@ -52,6 +52,13 @@ static inline void clock_tree_init(void);
 
 void system_init(void)
 {
+    // Enable FPU by setting full access on CP10 and CP11
+    // CP10 and CP11 are the FPU co-processors
+    // SCB (System Control Block)
+    // CPACR (CoProcessor Access Control Register)
+    // set CP10 and CP11 Full Access - these are two bit fields (0b11 - full access)
+    SCB->CPACR |= ((3UL << 10*2) | (3UL << 11*2));
+
     /* Reset the RCC clock configuration to the default reset state */
     /* Set HSION bit */
     RCC->CR |= (uint32_t)0x00000001;

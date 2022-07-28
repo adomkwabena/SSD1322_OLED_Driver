@@ -239,4 +239,14 @@ SECTIONS
         . = ALIGN(4);
         __bss_end__ = .;
     } > RAM
+
+    .ccm :
+    {
+        . = ALIGN(4);
+        __ccm_start__ = .;
+        *(.ccm)
+        *(.ccm*)
+        . = ALIGN(4);
+        __ccm_end__ = .;
+    } > CCMRAM
 }

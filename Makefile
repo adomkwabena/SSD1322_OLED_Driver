@@ -32,6 +32,7 @@ CFLAGS    += -Iinclude/cmsis/
 CFLAGS    += -Iinclude/system/
 CFLAGS    += -Iinclude/core_drivers/
 CFLAGS    += -Iinclude/device_drivers/ssd1322
+CFLAGS    += -Iinclude/device_drivers/hdc1000
 CFLAGS    += -Iinclude/util
 
 # Processor specific flags

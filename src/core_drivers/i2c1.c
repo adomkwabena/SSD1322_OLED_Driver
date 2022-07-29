@@ -41,11 +41,11 @@ static inline void i2c1_gpio_init(void)
     RCC->AHB1ENR   |= RCC_AHB1ENR_GPIOBEN;
 
     // Connect PB6 to AF4 (I2C1)
-    GPIOB->AFR[0]  &= ~(0xFF << GPIO_AFRL_AFSEL6_Pos);
+    GPIOB->AFR[0]  &= ~(0xFUL << GPIO_AFRL_AFSEL6_Pos);
     GPIOB->AFR[0]  |=  (0x4UL << GPIO_AFRL_AFSEL6_Pos);
 
     // Connect PB9 to AF4 (I2C1)
-    GPIOB->AFR[1]  &= ~(0xFF << GPIO_AFRH_AFSEL9_Pos);
+    GPIOB->AFR[1]  &= ~(0xFUL << GPIO_AFRH_AFSEL9_Pos);
     GPIOB->AFR[1]  |=  (0x4UL << GPIO_AFRH_AFSEL9_Pos);
 
     // Configure PB6 and PB9 as alternative function I/Os

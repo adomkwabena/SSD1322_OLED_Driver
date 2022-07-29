@@ -1,5 +1,5 @@
 /** 
- *  @file   i2c1.h
+ *  @file   i2c1.c
  *  @author Adom Kwabena
  *  @brief  A driver for the I2C1 module of the stm32f407vgt6 microcontroller.
  * 

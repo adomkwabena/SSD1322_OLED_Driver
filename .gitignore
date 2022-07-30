@@ -6,3 +6,4 @@ build
 *.elf
 *.bin
 __pycache__
+*.ttf

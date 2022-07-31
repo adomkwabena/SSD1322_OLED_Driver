@@ -115,6 +115,7 @@ typedef struct
     uint8_t  glyph_height;
     uint8_t  glyph_baseline;
     uint8_t  dummy_added;
+    uint8_t  glyph_advance_width;
 } font_table_entry_t;
 
 // Font data structure
@@ -229,6 +230,8 @@ void ssd1322_set_address(uint8_t x, uint8_t y);
  */
 void ssd1322_set_font(const font_t * font);
 
+void ssd1322_put_pixel_fb(uint8_t * fb, uint8_t x_virtual, uint8_t y);
+
 /**
  * @brief   This function draws a horizontal line into a frame buffer.
  *
@@ -287,18 +290,16 @@ void ssd1322_put_rectangle_fb(uint8_t * fb,
  * @param   y: The y coordinate to begin drawing the resource.
  * @param   rows: The height of the resource in pixels.
  * @param   columns: The width of the resource in pixels.
- * @param   padding: The number of dummy pixels added to the resource.
  * @param   resource_ptr: A pointer to the resource to be drawn into the frame buffer.
  *
  * @returns The current x coordinate of the frame buffer.
  */
-uint8_t ssd1322_put_resource_fb(uint8_t * fb,
-                                uint8_t x,
-                                uint8_t y,
-                                uint8_t rows,
-                                uint8_t columns,
-                                uint8_t padding,
-                                const uint8_t * resource_ptr);
+void ssd1322_put_resource_fb(uint8_t *fb,
+                             uint8_t x_virtual,
+                             uint8_t y,
+                             uint8_t rows,
+                             uint8_t columns,
+                             const uint8_t *resource_ptr);
 
 /**
  * @brief   Displays a bitmap on the screen.
@@ -308,12 +309,12 @@ uint8_t ssd1322_put_resource_fb(uint8_t * fb,
  * @param   y: The y coordinate to begin drawing the bitmap.
  * @param   bmp: A pointer to the bitmap to be drawn into the frame buffer.
  *
- * @returns The current x coordinate of the frame buffer.
+ * @returns None
  */
-uint8_t ssd1322_put_bitmap_fb(uint8_t * fb,
-                              uint8_t x,
-                              uint8_t y,
-                              const bitmap_t * bmp);
+void ssd1322_put_bitmap_fb(uint8_t *fb,
+                           uint8_t x,
+                           uint8_t y,
+                           const bitmap_t *bmp);
 
 /**
  * @brief   This function draws a character into a frame buffer starting from the

@@ -12,7 +12,7 @@
 // * Module Global Variables
 // ****************************************************************************
 
-const font_t * g_active_font = NULL;
+const font_t *g_active_font = NULL;
 
 // ****************************************************************************
 // * Private Functions
@@ -57,9 +57,9 @@ static inline void ssd1322_set_display_offset(uint8_t offset)
  *          1. Normal display [0xA4]
  *          2. Set Entire Display ON [0xA5]
  *          3. Set Entire Display OFF [0xA6]
- *          4. Inverse Display [0xA7]- The gray level of display data are 
+ *          4. Inverse Display [0xA7]- The gray level of display data are
  *                                     swapped i.e. GS0->GS15, GS1->GS14, ...
- * 
+ *
  * @param   display_mode: This selects one of the four configurations above.
  * @returns None
  */
@@ -92,7 +92,7 @@ static inline void ssd1322_set_partial_display(uint8_t partial_mode,
 
 /**
  * @brief   This function is used to enable or disable the VDD regulator.
- * 
+ *
  * @param   function: Enable or disable the internal VDD regulator.
  * @returns None
  */
@@ -103,12 +103,12 @@ static inline void ssd1322_set_function_selection(uint8_t function)
 }
 
 /**
- * @brief   This function sets the length of phases 1 and 2 of segement 
+ * @brief   This function sets the length of phases 1 and 2 of segement
  *          waveforms of the driver.
  *
- * @param   phase_length - The length of Phase 1 is defined by bits [3:0] 
+ * @param   phase_length - The length of Phase 1 is defined by bits [3:0]
  *                       from 5 to 31 in units of 2 display clocks (DCLKs).
- *                       The length of Phase 2 is defined by bits [7:4] 
+ *                       The length of Phase 2 is defined by bits [7:4]
  *                       from 3 to 15 in the unit of display clocks (DCLKs).
  * @returns None
  */
@@ -121,7 +121,7 @@ static inline void ssd1322_set_phase_length(uint8_t phase_length)
 /**
  * @brief   This function is used to select the frequency of the SSD1322 and
  *          together with other parameters the frame rate of the display.
- * 
+ *
  * @param   display_clock: Bits [3:0] define the clock divide ratio by a factor
  *                       from 1 to 16.
  *                       bits [7:4] define the oscillator frequency. There are
@@ -139,12 +139,12 @@ static inline void ssd1322_set_display_clock(uint8_t display_clock)
  * @brief   This function is used to enhance the display performance.
  *
  * @param   vsl: This is used to enable or disable external VSL.
- * @param   gray_scale_quality: This is used to improve the low gray 
+ * @param   gray_scale_quality: This is used to improve the low gray
  *                            scale quality.
  * @returns None
  */
 static inline void ssd1322_set_display_enhancement_a(uint8_t vsl,
-        uint8_t gray_scale_quality)
+                                                     uint8_t gray_scale_quality)
 {
     ssd1322_write_command(DISPLAY_ENHANCEMENT_A);
     ssd1322_write_data(0xA0 | vsl);
@@ -165,7 +165,7 @@ static inline void ssd1322_set_gpio(uint8_t gpio_mode)
 /**
  * @brief   This function is used to set the phase 3 second pre-charge period.
  *
- * @param   precharge_period: Sets the phase 3 second pre-charge period 
+ * @param   precharge_period: Sets the phase 3 second pre-charge period
  *                          from 0 to 15 display clocks (DCLKs).
  * @returns None
  */
@@ -176,9 +176,9 @@ static inline void ssd1322_set_precharge_period(uint8_t precharge_period)
 }
 
 /**
- * @brief   This function is used to set the first pre-charge (phase 2) level 
+ * @brief   This function is used to set the first pre-charge (phase 2) level
  *          of segment pins.
- * @param   precharge_voltage: Selects the precharge voltage with refernce 
+ * @param   precharge_voltage: Selects the precharge voltage with refernce
  *                             to VCC.
  * @returns None
  */
@@ -281,31 +281,31 @@ static inline void ssd1322_set_command_lock(uint8_t command_lock)
 static inline void ssd1322_gpio_init(void)
 {
     // Enable GPIOA clock
-    RCC->AHB1ENR   |= RCC_AHB1ENR_GPIOAEN;
-
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+ 
     // Configure PA0, PA1 and PA2 as output I/O.
-    GPIOA->MODER   &= ~(0x3UL << GPIO_MODER_MODER0_Pos) | 
-                      ~(0x3UL << GPIO_MODER_MODER1_Pos) |
-                      ~(0x3UL << GPIO_MODER_MODER12_Pos);
+    GPIOA->MODER &=  ~(0x3UL << GPIO_MODER_MODER0_Pos) |
+                     ~(0x3UL << GPIO_MODER_MODER1_Pos) |
+                     ~(0x3UL << GPIO_MODER_MODER12_Pos);
 
-    GPIOA->MODER   |=  (0x1UL << GPIO_MODER_MODER0_Pos) | 
-                       (0x1UL << GPIO_MODER_MODER1_Pos) |
-                       (0x1UL << GPIO_MODER_MODER2_Pos);
+    GPIOA->MODER |=   (0x1UL << GPIO_MODER_MODER0_Pos) |
+                      (0x1UL << GPIO_MODER_MODER1_Pos) |
+                      (0x1UL << GPIO_MODER_MODER2_Pos);
 
     // Configure PD4, PD12, PD13, PD14 & PD15 as very high speed I/O.
-    GPIOA->OSPEEDR |=  (0x3UL << GPIO_OSPEEDR_OSPEED0_Pos) |
-                       (0x3UL << GPIO_OSPEEDR_OSPEED1_Pos) |
-                       (0x3UL << GPIO_OSPEEDR_OSPEED2_Pos);
+    GPIOA->OSPEEDR |= (0x3UL << GPIO_OSPEEDR_OSPEED0_Pos) |
+                      (0x3UL << GPIO_OSPEEDR_OSPEED1_Pos) |
+                      (0x3UL << GPIO_OSPEEDR_OSPEED2_Pos);
 
     // Configure PD4, PD12, PD13, PD14 & PD15 as push pull I/O.
-    GPIOA->OTYPER  &= ~(0x1UL << GPIO_OTYPER_OT0_Pos) | 
-                      ~(0x1UL << GPIO_OTYPER_OT1_Pos) |
-                      ~(0x1UL << GPIO_OTYPER_OT2_Pos);
+    GPIOA->OTYPER &= ~(0x1UL << GPIO_OTYPER_OT0_Pos) |
+                     ~(0x1UL << GPIO_OTYPER_OT1_Pos) |
+                     ~(0x1UL << GPIO_OTYPER_OT2_Pos);
 
     // Disable pull up/pull down functionality on PD4, PD12, PD13, PD14 & PD15.
-    GPIOA->PUPDR   &= ~(0x3UL << GPIO_PUPDR_PUPD0_Pos) | 
-                      ~(0x3UL << GPIO_PUPDR_PUPD1_Pos) |
-                      ~(0x3UL << GPIO_PUPDR_PUPD12_Pos);
+    GPIOA->PUPDR &=  ~(0x3UL << GPIO_PUPDR_PUPD0_Pos) |
+                     ~(0x3UL << GPIO_PUPDR_PUPD1_Pos) |
+                     ~(0x3UL << GPIO_PUPDR_PUPD12_Pos);
 }
 
 // ****************************************************************************
@@ -356,7 +356,7 @@ void ssd1322_set_start_line(uint8_t start_line)
 {
     // Set vertical scroll by RAM
     ssd1322_write_command(SET_DISPLAY_START_LINE);
-    //Default => 0x00
+    // Default => 0x00
     ssd1322_write_data(start_line);
 }
 
@@ -446,13 +446,39 @@ void ssd1322_set_address(uint8_t x, uint8_t y)
     ssd1322_write_ram_enable();
 }
 
-void ssd1322_set_font(const font_t * font)
+void ssd1322_set_font(const font_t *font)
 {
     // Set active font
     g_active_font = font;
 }
 
-void ssd1322_put_horizontal_line_fb(uint8_t * fb,
+void ssd1322_put_pixel_fb(uint8_t *fb, uint8_t x_virtual, uint8_t y)
+{
+    // Convert x from a virtual address to a physical address
+    // This is done by dividing by 2
+    uint8_t x_physical = x_virtual >> 1;
+
+    // Check if the virtual address is odd or even.
+    // Two virtual addresses would provide the same physical address,
+    // so we'll need to determine which nibble to set.
+    // [0, 1] [2, 3] [4, 5]  ----> Virtual Address space
+    //    |      |      |
+    //    v      v      v
+    //    0      1      2    ----> Physical Address space
+
+    if (x_virtual & 0x01)
+    {
+        // If the virtual address is odd we want to set the right nibble
+        fb[(y * BUFFER_WIDTH) + x_physical] |= 0x0F;
+    }
+    else
+    {
+        // If the virtual address is even we want to set the left nibble
+        fb[(y * BUFFER_WIDTH) + x_physical] |= 0xF0;
+    }
+}
+
+void ssd1322_put_horizontal_line_fb(uint8_t *fb,
                                     uint8_t x,
                                     uint8_t y,
                                     uint8_t length)
@@ -463,7 +489,7 @@ void ssd1322_put_horizontal_line_fb(uint8_t * fb,
     }
 }
 
-void ssd1322_put_vertical_line_fb(uint8_t * fb,
+void ssd1322_put_vertical_line_fb(uint8_t *fb,
                                   uint8_t x,
                                   uint8_t y,
                                   uint8_t height,
@@ -487,7 +513,7 @@ void ssd1322_put_vertical_line_fb(uint8_t * fb,
     }
 }
 
-void ssd1322_put_rectangle_fb(uint8_t * fb,
+void ssd1322_put_rectangle_fb(uint8_t *fb,
                               uint8_t x_1,
                               uint8_t y_1,
                               uint8_t x_2,
@@ -499,168 +525,115 @@ void ssd1322_put_rectangle_fb(uint8_t * fb,
     ssd1322_put_horizontal_line_fb(fb, x_1, y_2, (x_2 - x_1 + 1));
 }
 
-uint8_t ssd1322_put_resource_fb(uint8_t * fb,
-                                uint8_t x,
-                                uint8_t y,
-                                uint8_t rows,
-                                uint8_t columns,
-                                uint8_t padding,
-                                const uint8_t * resource_ptr)
+void ssd1322_put_resource_fb(uint8_t *fb,
+                             uint8_t x_virtual,
+                             uint8_t y,
+                             uint8_t rows,
+                             uint8_t columns,
+                             const uint8_t *resource_ptr)
 {
-    // Variables for manipulating bytes
-    uint8_t temp_byte 	        = 0x00;
-    uint8_t new_pixel_byte 	= 0x00;
-    uint8_t old_pixel_byte 	= 0x00;
+    uint8_t x_physical = x_virtual >> 1;
 
-    // Iterators
-    uint8_t i;
-    uint8_t j;
-
-    // Ignore pixel padding upon first function call
-    static uint8_t previous_padding = NO_PIXEL_PADDING;
-    // Temporary padding - for manipulating padding info
-    uint8_t temp_padding = 0;
-
-    // Perform character spacing with "padding compensation"
-    if (x == 0 || padding == NO_PIXEL_PADDING)
+    if (!(x_virtual & 0x01))
     {
-        previous_padding = NO_PIXEL_PADDING;
-    }
-
-    if (previous_padding == THREE_PIXEL_PADDING)
-    {
-        // Move the x coordinate one step back and create the appearance
-        // that the previous_padding was one.
-        x--;
-        previous_padding = ONE_PIXEL_PADDING;
-    }
-
-    if (previous_padding == ONE_PIXEL_PADDING)
-    {
-        // Move to the space just after the previously displayed character
-        // prior to shifting incoming pixels. This creates a character
-        // spacing of 2 pixels since there is a space of 1 pixel after
-        // the previous character (padding of 1).
-        x++;
-        // Perform a global shift of incoming pixels by one pixel to the right,
-        // hence adding a pixel of spacing to the previous spacing (padding of 1)
-        // This automatically increases the padding of the incoming character by one.
-        for (i = 0; i < rows; i++)
+        // Display incoming pixels at the current physical x coordinate
+        for (uint8_t i = 0; i < rows; i++)
         {
-            for (j = 0; j < columns; j++)
+            for (uint8_t j = 0; j < columns; j++)
             {
-                new_pixel_byte = *resource_ptr++;
-                temp_byte = ((new_pixel_byte >> 4) & 0x0F) | old_pixel_byte;
-                fb[((y + i) * BUFFER_WIDTH) + x + j] = temp_byte;
-                old_pixel_byte = (new_pixel_byte << 4) & 0xF0;
-            }
-
-            fb[((y + i) * BUFFER_WIDTH) + x + j] = old_pixel_byte;
-            old_pixel_byte = 0x00;
-        }
-
-        x += columns;
-        // Increase padding due to the global shift of incoming character
-        // pixels to the right.
-        temp_padding = padding++;
-        // Padding should not be allowed to exceed 3
-        if (temp_padding > 3)
-        {
-            // Padding immediately greater than 3 is 4
-            // Move x coordinate two steps back to make it look like
-            // a padding of 0 was added to current character
-            x -= 2;
-            temp_padding = ZERO_PIXEL_PADDING;
-        }
-    }
-
-    if (previous_padding == TWO_PIXEL_PADDING)
-    {
-        // Display character right after the previous character since there is
-        // a spacing of 2 pixels after the previous character (padding of 2)
-        x++;
-        previous_padding = NO_PIXEL_PADDING;
-    }
-
-    if (previous_padding == ZERO_PIXEL_PADDING)
-    {
-        // Leave a space of 1 byte (2 pixels) after the previously displayed
-        // character since there is no space after the character (padding of 0)
-        x += 2;
-        previous_padding = NO_PIXEL_PADDING;
-    }
-
-    if (previous_padding == NO_PIXEL_PADDING)
-    {
-        // Display incoming pixels at the current x coordinate
-        for (i = 0; i < rows; i++)
-        {
-            for (j = 0; j < columns; j++)
-            {
-                fb[((y + i) * BUFFER_WIDTH) + x + j] = *resource_ptr++;
+                fb[((y + i) * BUFFER_WIDTH) + x_physical + j] = *resource_ptr++;
             }
         }
-
-        x += columns - 1;
-        temp_padding = padding;
     }
+    else
+    {
+        // If the virtual address is odd, do a pixel by pixel draw of the data
+        for (uint8_t i = 0; i < rows; i++)
+        {
+            // The iterator j is in bytes. We have to convert it into nibbles
+            // Since 1 byte = 2 nibbles, we multiply by 2.
+            for (uint8_t j = 0; j < columns; j++)
+            {
+                // Read data from resource
+                uint8_t data = *resource_ptr++;
 
-    // Update previous padding
-    previous_padding = temp_padding;
-
-    // Return the current x coordinate of the frame buffer
-    return x;
+                // We write two pixels for one colum address because 
+                // a pixel is 4 bits and a column address represents 1 byte.
+                
+                // If there is data in the left nibble, display it at an odd address
+                if (data & 0xF0)
+                {
+                    // Initially the address is odd ...
+                    ssd1322_put_pixel_fb(fb, x_virtual + (j * 2), y + i);
+                }
+                // If there is data in the right nibble, display it at an even address
+                if (data & 0x0F)
+                {
+                    // ... then the address becomes even, and the cycle continues
+                    ssd1322_put_pixel_fb(fb, x_virtual + (j * 2) + 1, y + i);
+                }
+            }
+        }
+    }
 }
 
-uint8_t ssd1322_put_bitmap_fb(uint8_t * fb,
-                              uint8_t x,
-                              uint8_t y,
-                              const bitmap_t * bmp)
+void ssd1322_put_bitmap_fb(uint8_t *fb,
+                           uint8_t x,
+                           uint8_t y,
+                           const bitmap_t *bmp)
 {
     // Display bitmap
-    x = ssd1322_put_resource_fb(fb, x, y, bmp->height, (bmp->width * 2), \
-                                NO_PIXEL_PADDING, bmp->address);
-
-    // Return the current x coordinate of the frame buffer
-    return x;
+    ssd1322_put_resource_fb(fb, x, y, bmp->height, bmp->width, bmp->address);
 }
 
-uint8_t ssd1322_put_char_fb(uint8_t * fb, uint8_t x, uint8_t y, const char c)
+uint8_t ssd1322_put_char_fb(uint8_t *fb, uint8_t x, uint8_t y, const char c)
 {
-    // Fetch glyph metadata
-    uint16_t glyph_offset  = g_active_font->font_table[c - ' '].glyph_location;
-    uint8_t  columns       = g_active_font->font_table[c - ' '].glyph_width;
-    uint8_t  rows          = g_active_font->font_table[c - ' '].glyph_height;
-    uint8_t  baseline      = g_active_font->font_table[c - ' '].glyph_baseline;
-    uint8_t  padding       = g_active_font->font_table[c - ' '].dummy_added;
+    if (c != ' ')
+    {
+        // Fetch glyph metadata
+        uint16_t glyph_offset = g_active_font->font_table[c - '!'].glyph_location;
+        uint8_t columns = g_active_font->font_table[c - '!'].glyph_width;
+        uint8_t rows = g_active_font->font_table[c - '!'].glyph_height;
+        uint8_t baseline = g_active_font->font_table[c - '!'].glyph_baseline;
+        uint8_t advance_width = g_active_font->font_table[c - '!'].glyph_advance_width;
+        uint8_t padding = g_active_font->font_table[c - '!'].dummy_added;
 
-    // Get location of glyph in font
-    const uint8_t * glyph_address = g_active_font->address + glyph_offset;
-    // Calculate correct glyph baseline
-    y += baseline;
-    // Display glyph
-    x = ssd1322_put_resource_fb(fb, x, y, rows, (columns * 2), \
-                                padding, glyph_address);
+        // Take padded data into account
+        advance_width = advance_width - padding;
 
-    // Return the current x coordinate of the frame buffer
-    return x;
+        // Get location of glyph in font
+        const uint8_t *glyph_address = g_active_font->address + glyph_offset;
+        // Calculate correct glyph baseline
+        y += baseline;
+        // Display glyph
+        ssd1322_put_resource_fb(fb, x, y, rows, columns, glyph_address);
+
+        // Return the current x coordinate of the frame buffer
+        return advance_width;
+    }
+    else
+    {
+        // Spacing of ' ' character
+        // TODO: change this for non monospace fonts
+        return 0x00;
+    }
 }
 
-uint8_t ssd1322_put_string_fb(uint8_t * fb,
+uint8_t ssd1322_put_string_fb(uint8_t *fb,
                               uint8_t x,
                               uint8_t y,
-                              const char * string)
+                              const char *string)
 {
     while (*string)
     {
-        x = ssd1322_put_char_fb(fb, x, y, *string++);
+        x += ssd1322_put_char_fb(fb, x, y, *string++);
     }
 
     // Return the current x coordinate of the frame buffer
     return x;
 }
 
-void ssd1322_fill_fb(uint8_t * fb, uint8_t data)
+void ssd1322_fill_fb(uint8_t *fb, uint8_t data)
 {
     for (uint8_t i = 0; i < BUFFER_HEIGHT; i++)
     {
@@ -671,7 +644,7 @@ void ssd1322_fill_fb(uint8_t * fb, uint8_t data)
     }
 }
 
-void ssd1322_display_fb(uint8_t * fb)
+void ssd1322_display_fb(uint8_t *fb)
 {
     ssd1322_set_address(0, 0);
     // Send entire frame buffer to ssd1322

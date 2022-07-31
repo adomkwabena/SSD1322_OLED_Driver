@@ -55,9 +55,9 @@ def read_bitmap(filename):
 
 def add_dummy_data(bitmap, width, height):
     """
-    Adds dummy data to a bitmap to ensure the width is divisible by 4. 
-    This is required because the SSD1322 OLED driver maintains a single column 
-    address for four pixels.
+    Adds dummy data to a bitmap to ensure the width is divisible by 2. 
+    This is required because each pixel is 4 bits wide and we want to
+    keep the data aligned to a byte for easy storage.
     
     bitmap (list): A list of integers (pixel values)
     width (int): The width of the bitmap
@@ -74,8 +74,8 @@ def add_dummy_data(bitmap, width, height):
     """
     output = []
     bitmap_data = tuple()
-    # Maximum dummy data should be 3 
-    dummy_to_add = (4 - (width % 4)) % 4
+    # Maximum dummy data should be 1 
+    dummy_to_add = width % 2
     
     new_width = width + dummy_to_add
     
@@ -153,10 +153,9 @@ def bitmap_to_array(bitmaps):
         bitmap_data, dummy_added = add_dummy_data(data, columns, rows)
         # Merge adjacent pixels into single bytes
         bitmap = format_bitmap(bitmap_data[0])
-        # Represent the width of the bitmap as the SSD1322 does, where each
-        # column address represents 4 pixels.This requires a division by 2 (each byte represents 2 pixels)
-        # but we divide by 4 because format_bitmap() halves the width of the bitmap.
-        width = bitmap_data[1] // 4
+        # The width here represents the number of bytes = no. of pixels // 2
+        # This is because each pixel is 4 bits wide
+        width = bitmap_data[1] // 2
         height = bitmap_data[2]
         
         bitmap_table[file] = {
@@ -302,8 +301,7 @@ def font_to_array(filename, size):
     font_table = {}
     
     # Prepare characters for rendering
-    elements = ' ' + string.ascii_letters +  string.digits + string.punctuation
-    elements.replace('//', '/')
+    elements = string.ascii_letters +  string.digits + string.punctuation
     keys = [i for i in elements]
     keys.sort()
     
@@ -317,53 +315,37 @@ def font_to_array(filename, size):
     glyph_size = 0
 
     for char in keys:
-        if char == " ":
-            # Manually insert the space character
-            # Space is equal to 4 pixels
-            font_table[char] = {
-                                'Width'    : 2,
-                                'Height'   : 1,
-                                'Location' : glyph_location,
-                                'Baseline' : 2,
-                                'Dummy'    : 0,
-                                'Bitmap'   : ["0x00", "0x00", "0x00", "0x00"],
-                                'String'   : ["SPACE"],
-                               }
-            
-            glyph_size = 4
-            # Update the location of the next character in the font array
-            glyph_location += glyph_size
-        else:
-            # Render character
-            glyph = fnt.glyph_for_character(char)
-            ch = glyph.bitmap
-        
-            # Format character
-            bitmap_data = tuple() 
-            bitmap = [i for i in ch.pixels]        
-            bitmap_data, dummy_added = add_dummy_data(bitmap, ch.width, ch.height)
-            glyph_bitmap = format_bitmap(bitmap_data[0])
-            # Represent the width of the bitmap as the SSD1322 does, where each
-            # column address represents 4 pixels.This requires a division by 2 (each byte represents 2 pixels)
-            # but we divide by 4 because format_bitmap() halves the width of the bitmap.
-            glyph_width    = bitmap_data[1] // 4
-            glyph_height   = bitmap_data[2]
-            glyph_string   = ch.__repr__()
-            glyph_baseline = font_height - glyph.ascent - font_descent
-        
-            font_table[char] = {
-                                'Width'    : glyph_width,
-                                'Height'   : glyph_height, 
-                                'Location' : glyph_location,
-                                'Baseline' : glyph_baseline, 
-                                'Dummy'    : dummy_added,
-                                'Bitmap'   : glyph_bitmap,
-                                'String'   : glyph_string.split('\n'),
-                                }
-        
-            glyph_size = glyph_width * 2 * glyph_height
-            # Update the location of the next character in the font array
-            glyph_location += glyph_size
+        # Render character
+        glyph = fnt.glyph_for_character(char)
+        ch = glyph.bitmap
+    
+        # Format character
+        bitmap_data = tuple() 
+        bitmap = [i for i in ch.pixels]        
+        bitmap_data, dummy_added = add_dummy_data(bitmap, ch.width, ch.height)
+        # Merge adjacent pixels into single bytes
+        glyph_bitmap = format_bitmap(bitmap_data[0])
+        # The width here represents the number of bytes = no. of pixels // 2
+        # This is because each pixel is 4 bits wide
+        glyph_width         = bitmap_data[1] // 2
+        glyph_height        = bitmap_data[2]
+        glyph_string        = ch.__repr__()
+        glyph_baseline      = font_height - glyph.ascent - font_descent
+    
+        font_table[char] = {
+                            'Width'         : glyph_width,
+                            'Advance_Width' : glyph.advance_width,
+                            'Height'        : glyph_height, 
+                            'Location'      : glyph_location,
+                            'Baseline'      : glyph_baseline, 
+                            'Dummy'         : dummy_added,
+                            'Bitmap'        : glyph_bitmap,
+                            'String'        : glyph_string.split('\n'),
+                            }
+
+        glyph_size = glyph_width * glyph_height
+        # Update the location of the next character in the font array
+        glyph_location += glyph_size
         
     return (font_table, font_height, font_descent)
 
@@ -381,7 +363,7 @@ def font_to_c(filename, size):
     file = filename.split('.')[0].lstrip(string.digits)
     # Replace punctuation characters with underscores
     t = {ord(i) : '_' for i in string.punctuation}
-    file = file.translate(t)
+    file = file.translate(t) + '_' + str(size)
     
     # Get font data
     font_table, font_height, font_descent = font_to_array(filename, size)  
@@ -431,14 +413,15 @@ def font_to_c(filename, size):
         keys = list(font_table.keys())
         for i in keys:
             # Convert font parameters to hexadecimal strings
-            location   = "0x%04X" % font_table[i]['Location']
-            width      = "0x%02X" % font_table[i]['Width']
-            height     = "0x%02X" % font_table[i]['Height']
-            baseline   = "0x%02X" % font_table[i]['Baseline']
-            dummy      = "0x%02X" % font_table[i]['Dummy']       
+            location      = "0x%04X" % font_table[i]['Location']
+            width         = "0x%02X" % font_table[i]['Width']
+            height        = "0x%02X" % font_table[i]['Height']
+            baseline      = "0x%02X" % font_table[i]['Baseline']
+            dummy         = "0x%02X" % font_table[i]['Dummy'] 
+            advance_width = "0x%02X" % font_table[i]['Advance_Width']      
             # Make a font table entry for the current glyph
-            f.write("    {%s, %s, %s, %s, %s},         " % \
-                    (location, width, height, baseline, dummy))
+            f.write("    {%s, %s, %s, %s, %s, %s},         " % \
+                    (location, width, height, baseline, dummy, advance_width))
             f.write("// Character - \"{}\", Ascii - {}\n".format(i, ord(i)))   
         # End of Font table
         f.write("};\n\n")   
@@ -459,7 +442,7 @@ def font_to_c(filename, size):
             f.write("    // " + 72 * "*" + "\n")
             for i in range(font_table[char]['Height']):
                 f.write("    ")
-                for j in range(font_table[char]['Width'] * 2):
+                for j in range((font_table[char]['Width'])):
                     data = font_table[char]['Bitmap'][index]
                     f.write(data + ', ')
                     index += 1
@@ -487,6 +470,6 @@ def font_to_c(filename, size):
 if __name__ == "__main__":
     # Ensure that the .bmp and .ttf files you're trying to generate code for
     # are in the working directory.
-    font_to_c("Lato-Regular.ttf", 27)
-    bitmap_to_c(["ok.bmp", "CN.bmp"])
+    font_to_c("RobotoMono-Regular.ttf", 27)
+    #bitmap_to_c(["ok.bmp", "CN.bmp"])
                 

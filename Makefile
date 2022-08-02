@@ -47,7 +47,7 @@ CFLAGS    += -g3 -gdwarf-2
 # Linker flags to link for code size
 LDFLAGS   += -Wl,--gc-sections --specs=nosys.specs -T./scripts/linker_script.ld
 # Generate a map file
-LDFLAGS   += -Wl,-Map=$@.map
+LDFLAGS   += -Wl,-Map=build/"ssd1322_oled.map"
 
 # Dependency flags
 DEPFLAGS  += -MMD -MP -MF $@.d

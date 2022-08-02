@@ -469,7 +469,28 @@ def font_to_c(filename, size):
             
 if __name__ == "__main__":
     # Ensure that the .bmp and .ttf files you're trying to generate code for
-    # are in the working directory.
-    font_to_c("RobotoMono-Regular.ttf", 27)
-    #bitmap_to_c(["ok.bmp", "CN.bmp"])
+    # are in the working directory of this script.
+
+    
+    # List of fonts to generate files for
+    fonts = ["RobotoMono-Regular.ttf", "CourierPrime-Regular.ttf"]
+    fonts = fonts + ["UbuntuMono-Regular.ttf", "RedHatMono-Regular.ttf"]
+    fonts = fonts + ["Inconsolata-Regular.ttf", "JetBrainsMono-Regular.ttf"]
+
+    # List of font sizes to generate files for
+    font_sizes = [15, 20, 30, 40, 50, 60]
+    
+    """
+    # Generate files for multiple font sizes of multiple fonts
+    for font in fonts:
+        for size in sizes:
+            font_to_c(font, size)   
+    """       
+    
+
+    # Selected font
+    font = "UbuntuMono-Regular.ttf"
+    # Generate files for multiple font sizes of a selected font
+    for size in font_sizes:
+        font_to_c(font, size)
                 

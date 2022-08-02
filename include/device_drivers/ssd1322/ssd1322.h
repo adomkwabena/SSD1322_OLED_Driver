@@ -286,7 +286,7 @@ void ssd1322_put_rectangle_fb(uint8_t * fb,
  *          the user selected coordinates into a frame buffer.
  *
  * @param   fb: A pointer to the frame buffer to draw the resource into.
- * @param   x: The x coordinate to begin drawing the resource.
+ * @param   x_virtual: The x coordinate to begin drawing the resource.
  * @param   y: The y coordinate to begin drawing the resource.
  * @param   rows: The height of the resource in pixels.
  * @param   columns: The width of the resource in pixels.
@@ -312,7 +312,7 @@ void ssd1322_put_resource_fb(uint8_t *fb,
  * @returns None
  */
 void ssd1322_put_bitmap_fb(uint8_t *fb,
-                           uint8_t x,
+                           uint8_t x_virtual,
                            uint8_t y,
                            const bitmap_t *bmp);
 
@@ -321,27 +321,27 @@ void ssd1322_put_bitmap_fb(uint8_t *fb,
  *          supplied coordinates.
  *
  * @param   fb: A pointer to the frame buffer to draw the character into.
- * @param   x: The x coordinate to begin drawing the character.
+ * @param   x_virtual: The x coordinate to begin drawing the character.
  * @param   y: The y coordinate to begin drawing the character.
  * @param   c: The character to be drawn into the frame buffer.
  *
  * @returns The current x coordinate of the frame buffer.
  */
-uint8_t ssd1322_put_char_fb(uint8_t * fb, uint8_t x, uint8_t y, const char c);
+uint8_t ssd1322_put_char_fb(uint8_t * fb, uint8_t x_virtual, uint8_t y, const char c);
 
 /**
  * @brief   This function draws a string into a frame buffer starting from
  *          the supplied coordinates.
  *
  * @param   fb: A pointer to the frame buffer to draw the string into.
- * @param   x: The x coordinate to begin drawing the string.
+ * @param   x_virtual: The x coordinate to begin drawing the string.
  * @param   y: The y coordinate to begin drawing the string.
  * @param   string: The string to be displayed.
  *
  * @returns The current x coordinate of the frame buffer.
  */
 uint8_t ssd1322_put_string_fb(uint8_t * fb,
-                              uint8_t x,
+                              uint8_t x_virtual,
                               uint8_t y,
                               const char * string);
 

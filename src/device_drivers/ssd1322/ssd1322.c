@@ -578,15 +578,15 @@ void ssd1322_put_resource_fb(uint8_t *fb,
 }
 
 void ssd1322_put_bitmap_fb(uint8_t *fb,
-                           uint8_t x,
+                           uint8_t x_virtual,
                            uint8_t y,
                            const bitmap_t *bmp)
 {
     // Display bitmap
-    ssd1322_put_resource_fb(fb, x, y, bmp->height, bmp->width, bmp->address);
+    ssd1322_put_resource_fb(fb, x_virtual, y, bmp->height, bmp->width, bmp->address);
 }
 
-uint8_t ssd1322_put_char_fb(uint8_t *fb, uint8_t x, uint8_t y, const char c)
+uint8_t ssd1322_put_char_fb(uint8_t *fb, uint8_t x_virtual, uint8_t y, const char c)
 {
     // Fetch glyph metadata
     uint16_t glyph_offset = g_active_font->font_table[c - ' '].glyph_location;
@@ -599,23 +599,23 @@ uint8_t ssd1322_put_char_fb(uint8_t *fb, uint8_t x, uint8_t y, const char c)
     // Calculate correct glyph baseline
     y += baseline;
     // Display glyph
-    ssd1322_put_resource_fb(fb, x, y, rows, columns, glyph_address);
+    ssd1322_put_resource_fb(fb, x_virtual, y, rows, columns, glyph_address);
     // Return the current x coordinate of the frame buffer
     return advance_width;
 }
 
 uint8_t ssd1322_put_string_fb(uint8_t *fb,
-                              uint8_t x,
+                              uint8_t x_virtual,
                               uint8_t y,
                               const char *string)
 {
     while (*string)
     {
-        x += ssd1322_put_char_fb(fb, x, y, *string++);
+        x_virtual += ssd1322_put_char_fb(fb, x_virtual, y, *string++);
     }
 
     // Return the current x coordinate of the frame buffer
-    return x;
+    return x_virtual;
 }
 
 void ssd1322_fill_fb(uint8_t *fb, uint8_t data)

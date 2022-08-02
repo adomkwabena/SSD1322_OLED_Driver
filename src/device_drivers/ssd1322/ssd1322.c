@@ -371,9 +371,9 @@ void ssd1322_fill_ram(uint8_t data)
     ssd1322_set_row_address(0x00, 0x7F);
     ssd1322_write_ram_enable();
 
-    for (uint8_t i = 0; i < DISPLAY_HEIGHT; i++)
+    for (uint8_t i = 0; i < GDDRAM_HEIGHT; i++)
     {
-        for (uint8_t j = 0; j < DISPLAY_WIDTH; j++)
+        for (uint8_t j = 0; j < GDDRAM_WIDTH; j++)
         {
             ssd1322_write_data(data);
         }
@@ -635,7 +635,7 @@ void ssd1322_display_fb(uint8_t *fb)
     // Send entire frame buffer to ssd1322
     DATA_COMMAND_HIGH();
     CHIP_SELECT_LOW();
-    spi1_transmit_buffer(fb, 8192);
+    spi1_transmit_buffer(fb, BUFFER_SIZE);
     DATA_COMMAND_HIGH();
     CHIP_SELECT_HIGH();
 }

@@ -59,10 +59,15 @@
 #define DISPLAY_ENHANCEMENT_B                   0xD1
 #define SET_COMMAND_LOCK                        0xFD
 
-// Display dimensions
+// GDDRAM dimensions in bytes
 // Actual width is 480 pixels but each pixel is 4 bits wide
-#define DISPLAY_WIDTH                           240U
-#define DISPLAY_HEIGHT                          128U
+// GDDRAM - Graphics Display Data RAM
+#define GDDRAM_WIDTH                            240U
+#define GDDRAM_HEIGHT                           128U
+
+// Dimensions of physical display in pixels
+#define DISPLAY_WIDTH                           256U
+#define DISPLAY_HEIGHT                          64U
 
 // Options for turning display on or off
 #define DISPLAY_ON                              0x01
@@ -88,14 +93,10 @@
 #define COMMANDS_UNLOCK                         0x12
 
 // Frame buffer definitions
+// These dimensions are in number of bytes
 #define BUFFER_WIDTH                            128U
 #define BUFFER_HEIGHT                           64U
 #define BUFFER_SIZE                             8192U
-#define NO_PIXEL_PADDING                        99U
-#define ONE_PIXEL_PADDING                       1U
-#define TWO_PIXEL_PADDING                       2U
-#define THREE_PIXEL_PADDING                     3U
-#define ZERO_PIXEL_PADDING                      0U
 
 // Drawing definitions
 #define ALIGN_RIGHT                             0U

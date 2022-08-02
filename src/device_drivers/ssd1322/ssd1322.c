@@ -588,35 +588,23 @@ void ssd1322_put_bitmap_fb(uint8_t *fb,
 
 uint8_t ssd1322_put_char_fb(uint8_t *fb, uint8_t x, uint8_t y, const char c)
 {
-    if (c != ' ')
-    {
-        // Fetch glyph metadata
-        uint16_t glyph_offset = g_active_font->font_table[c - '!'].glyph_location;
-        uint8_t columns       = g_active_font->font_table[c - '!'].glyph_width;
-        uint8_t rows          = g_active_font->font_table[c - '!'].glyph_height;
-        uint8_t baseline      = g_active_font->font_table[c - '!'].glyph_baseline;
-        uint8_t advance_width = g_active_font->font_table[c - '!'].glyph_advance_width;
-        uint8_t padding       = g_active_font->font_table[c - '!'].dummy_added;
-
-        // Take padded data into account
-        advance_width = advance_width - padding;
-
-        // Get location of glyph in font
-        const uint8_t *glyph_address = g_active_font->address + glyph_offset;
-        // Calculate correct glyph baseline
-        y += baseline;
-        // Display glyph
-        ssd1322_put_resource_fb(fb, x, y, rows, columns, glyph_address);
-
-        // Return the current x coordinate of the frame buffer
-        return advance_width;
-    }
-    else
-    {
-        // Spacing of ' ' character
-        // TODO: change this for non monospace fonts
-        return 0x00;
-    }
+    // Fetch glyph metadata
+    uint16_t glyph_offset = g_active_font->font_table[c - ' '].glyph_location;
+    uint8_t columns       = g_active_font->font_table[c - ' '].glyph_width;
+    uint8_t rows          = g_active_font->font_table[c - ' '].glyph_height;
+    uint8_t baseline      = g_active_font->font_table[c - ' '].glyph_baseline;
+    uint8_t advance_width = g_active_font->font_table[c - ' '].glyph_advance_width;
+    uint8_t padding       = g_active_font->font_table[c - ' '].dummy_added;
+    // Take padded data into account
+    advance_width = advance_width - padding;
+    // Get location of glyph in font
+    const uint8_t *glyph_address = g_active_font->address + glyph_offset;
+    // Calculate correct glyph baseline
+    y += baseline;
+    // Display glyph
+    ssd1322_put_resource_fb(fb, x, y, rows, columns, glyph_address);
+    // Return the current x coordinate of the frame buffer
+    return advance_width;
 }
 
 uint8_t ssd1322_put_string_fb(uint8_t *fb,

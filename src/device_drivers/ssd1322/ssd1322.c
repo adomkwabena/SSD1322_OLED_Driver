@@ -264,7 +264,7 @@ static inline void ssd1322_set_linear_gray_scale_table(void)
 /**
  * @brief   This function is used to lock the SSD1322 driver chip from accepting
  *          any command apart from the "command lock" command.
- * @param   command_lock - sets the SSD1322 to command lock or unlock.
+ * @param   command_lock: sets the SSD1322 to command lock or unlock.
  * @returns None
  */
 static inline void ssd1322_set_command_lock(uint8_t command_lock)
@@ -592,11 +592,11 @@ uint8_t ssd1322_put_char_fb(uint8_t *fb, uint8_t x, uint8_t y, const char c)
     {
         // Fetch glyph metadata
         uint16_t glyph_offset = g_active_font->font_table[c - '!'].glyph_location;
-        uint8_t columns = g_active_font->font_table[c - '!'].glyph_width;
-        uint8_t rows = g_active_font->font_table[c - '!'].glyph_height;
-        uint8_t baseline = g_active_font->font_table[c - '!'].glyph_baseline;
+        uint8_t columns       = g_active_font->font_table[c - '!'].glyph_width;
+        uint8_t rows          = g_active_font->font_table[c - '!'].glyph_height;
+        uint8_t baseline      = g_active_font->font_table[c - '!'].glyph_baseline;
         uint8_t advance_width = g_active_font->font_table[c - '!'].glyph_advance_width;
-        uint8_t padding = g_active_font->font_table[c - '!'].dummy_added;
+        uint8_t padding       = g_active_font->font_table[c - '!'].dummy_added;
 
         // Take padded data into account
         advance_width = advance_width - padding;

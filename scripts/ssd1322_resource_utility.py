@@ -301,7 +301,7 @@ def font_to_array(filename, size):
     font_table = {}
     
     # Prepare characters for rendering
-    elements = string.ascii_letters +  string.digits + string.punctuation
+    elements = ' ' + string.ascii_letters +  string.digits + string.punctuation + chr(176)
     keys = [i for i in elements]
     keys.sort()
     

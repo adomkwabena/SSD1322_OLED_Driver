@@ -14,7 +14,7 @@
 
 // Define the precision in terms of decimal places (rounding of is not performed)
 // For example 2.17843 with a precision of 2 is 2.17
-#define PRECISION       3
+#define PRECISION       2
 
 /**
  *  @brief Converts a floating point number into a string.

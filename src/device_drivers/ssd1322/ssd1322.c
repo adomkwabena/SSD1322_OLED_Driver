@@ -534,6 +534,21 @@ void ssd1322_put_resource_fb(uint8_t *fb,
 {
     uint8_t x_physical = x_virtual >> 1;
 
+    // Check if there is enough space to draw the requested resource
+    if (((x_physical + columns) >= BUFFER_WIDTH) || ((y + rows) >= BUFFER_HEIGHT))
+    {
+        // Exit if there is not enough space
+        return;
+    }
+
+    // Check if input pointers are valid
+    if (resource_ptr == NULL || fb == NULL)
+    {
+        // Exit if a pointer is invalid
+        return;
+    }
+
+    // Check if the virtual address is even
     if (!(x_virtual & 0x01))
     {
         // Display incoming pixels at the current physical x coordinate
@@ -588,6 +603,15 @@ void ssd1322_put_bitmap_fb(uint8_t *fb,
 
 uint8_t ssd1322_put_char_fb(uint8_t *fb, uint8_t x_virtual, uint8_t y, const char c)
 {
+    // Check if character is valid or not
+    // Note: Character 127 is a special character we've added
+    // The actual representation for this character is 176
+    if (!(c >= 32 && c <= 127))
+    {
+        // Exit if the character does not exist
+        return 0;
+    }
+
     // Fetch glyph metadata
     uint16_t glyph_offset = g_active_font->font_table[c - ' '].glyph_location;
     uint8_t columns       = g_active_font->font_table[c - ' '].glyph_width;

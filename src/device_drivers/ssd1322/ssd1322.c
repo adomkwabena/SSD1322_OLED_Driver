@@ -322,6 +322,16 @@ void ssd1322_write_data(uint8_t data)
     DATA_COMMAND_LOW();
 }
 
+void ssd1322_write_data_buffer(uint8_t * fb, uint32_t buffer_size)
+{
+    // Send a buffer of data to the ssd1322 chip
+    DATA_COMMAND_HIGH();
+    CHIP_SELECT_LOW();
+    spi1_transmit_buffer(fb, BUFFER_SIZE);
+    DATA_COMMAND_HIGH();
+    CHIP_SELECT_HIGH();
+}
+
 void ssd1322_write_command(uint8_t command)
 {
     DATA_COMMAND_LOW();
@@ -655,11 +665,8 @@ void ssd1322_fill_fb(uint8_t *fb, uint8_t data)
 
 void ssd1322_display_fb(uint8_t *fb)
 {
+    // Start at the address (0, 0)
     ssd1322_set_address(0, 0);
     // Send entire frame buffer to ssd1322
-    DATA_COMMAND_HIGH();
-    CHIP_SELECT_LOW();
-    spi1_transmit_buffer(fb, BUFFER_SIZE);
-    DATA_COMMAND_HIGH();
-    CHIP_SELECT_HIGH();
+    ssd1322_write_data_buffer(fb, BUFFER_SIZE);
 }

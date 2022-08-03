@@ -148,6 +148,16 @@ typedef struct
 void ssd1322_write_data(uint8_t data);
 
 /**
+ * @brief   This function writes the specified number of bytes
+ *          to the SSD1322.
+ * 
+ * @param   fb: A pointer to the frame buffer to send to the SSD1322.
+ * @param   buffer_size: The number of bytes to send.
+ * @returns None
+ */
+void ssd1322_write_data_buffer(uint8_t * fb, uint32_t buffer_size);
+
+/**
  * @brief   Writes a single byte command to the SSD1322 chip.
  * @param   command: The command to be written.
  * @returns None

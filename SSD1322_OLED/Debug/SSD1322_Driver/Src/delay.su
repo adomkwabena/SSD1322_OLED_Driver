@@ -1,2 +1,0 @@
-delay.c:12:6:delay_initialize	4	static
-delay.c:20:6:__delay_us	24	static

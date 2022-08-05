@@ -1,0 +1,9 @@
+build
+.vscode
+*.d
+*.d.*
+*.o
+*.elf
+*.bin
+__pycache__
+*.ttf
